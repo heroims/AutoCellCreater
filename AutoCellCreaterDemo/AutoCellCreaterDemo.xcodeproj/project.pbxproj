@@ -15,8 +15,8 @@
 		84B7E53A1E45D48700EAB159 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84B7E5381E45D48700EAB159 /* LaunchScreen.storyboard */; };
 		84B7E5451E45D48700EAB159 /* AutoCellCreaterDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B7E5441E45D48700EAB159 /* AutoCellCreaterDemoTests.m */; };
 		84B7E5501E45D48700EAB159 /* AutoCellCreaterDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B7E54F1E45D48700EAB159 /* AutoCellCreaterDemoUITests.m */; };
-		84B7E5631E45D51900EAB159 /* AutoCellCreaterTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B7E5621E45D51900EAB159 /* AutoCellCreaterTableView.m */; };
-		84B7E5661E45D52200EAB159 /* AutoCellCreaterCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B7E5651E45D52200EAB159 /* AutoCellCreaterCollectionView.m */; };
+		84B7E56D1E45E38500EAB159 /* AutoCellCreaterCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B7E5691E45E38500EAB159 /* AutoCellCreaterCollectionView.m */; };
+		84B7E56E1E45E38500EAB159 /* AutoCellCreaterTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B7E56C1E45E38500EAB159 /* AutoCellCreaterTableView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,10 +53,10 @@
 		84B7E54B1E45D48700EAB159 /* AutoCellCreaterDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AutoCellCreaterDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		84B7E54F1E45D48700EAB159 /* AutoCellCreaterDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AutoCellCreaterDemoUITests.m; sourceTree = "<group>"; };
 		84B7E5511E45D48700EAB159 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		84B7E5611E45D51900EAB159 /* AutoCellCreaterTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoCellCreaterTableView.h; sourceTree = "<group>"; };
-		84B7E5621E45D51900EAB159 /* AutoCellCreaterTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoCellCreaterTableView.m; sourceTree = "<group>"; };
-		84B7E5641E45D52200EAB159 /* AutoCellCreaterCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoCellCreaterCollectionView.h; sourceTree = "<group>"; };
-		84B7E5651E45D52200EAB159 /* AutoCellCreaterCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoCellCreaterCollectionView.m; sourceTree = "<group>"; };
+		84B7E5681E45E38500EAB159 /* AutoCellCreaterCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoCellCreaterCollectionView.h; sourceTree = "<group>"; };
+		84B7E5691E45E38500EAB159 /* AutoCellCreaterCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoCellCreaterCollectionView.m; sourceTree = "<group>"; };
+		84B7E56B1E45E38500EAB159 /* AutoCellCreaterTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoCellCreaterTableView.h; sourceTree = "<group>"; };
+		84B7E56C1E45E38500EAB159 /* AutoCellCreaterTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoCellCreaterTableView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,8 +107,8 @@
 		84B7E5291E45D48700EAB159 /* AutoCellCreaterDemo */ = {
 			isa = PBXGroup;
 			children = (
-				84B7E55F1E45D50B00EAB159 /* AutoCellCreaterCollectionView */,
-				84B7E5601E45D50B00EAB159 /* AutoCellCreaterTableView */,
+				84B7E5671E45E38500EAB159 /* AutoCellCreaterCollectionView */,
+				84B7E56A1E45E38500EAB159 /* AutoCellCreaterTableView */,
 				84B7E52D1E45D48700EAB159 /* AppDelegate.h */,
 				84B7E52E1E45D48700EAB159 /* AppDelegate.m */,
 				84B7E5301E45D48700EAB159 /* ViewController.h */,
@@ -148,23 +148,25 @@
 			path = AutoCellCreaterDemoUITests;
 			sourceTree = "<group>";
 		};
-		84B7E55F1E45D50B00EAB159 /* AutoCellCreaterCollectionView */ = {
+		84B7E5671E45E38500EAB159 /* AutoCellCreaterCollectionView */ = {
 			isa = PBXGroup;
 			children = (
-				84B7E5641E45D52200EAB159 /* AutoCellCreaterCollectionView.h */,
-				84B7E5651E45D52200EAB159 /* AutoCellCreaterCollectionView.m */,
+				84B7E5681E45E38500EAB159 /* AutoCellCreaterCollectionView.h */,
+				84B7E5691E45E38500EAB159 /* AutoCellCreaterCollectionView.m */,
 			);
-			path = AutoCellCreaterCollectionView;
-			sourceTree = SOURCE_ROOT;
+			name = AutoCellCreaterCollectionView;
+			path = ../../AutoCellCreaterCollectionView;
+			sourceTree = "<group>";
 		};
-		84B7E5601E45D50B00EAB159 /* AutoCellCreaterTableView */ = {
+		84B7E56A1E45E38500EAB159 /* AutoCellCreaterTableView */ = {
 			isa = PBXGroup;
 			children = (
-				84B7E5611E45D51900EAB159 /* AutoCellCreaterTableView.h */,
-				84B7E5621E45D51900EAB159 /* AutoCellCreaterTableView.m */,
+				84B7E56B1E45E38500EAB159 /* AutoCellCreaterTableView.h */,
+				84B7E56C1E45E38500EAB159 /* AutoCellCreaterTableView.m */,
 			);
-			path = AutoCellCreaterTableView;
-			sourceTree = SOURCE_ROOT;
+			name = AutoCellCreaterTableView;
+			path = ../../AutoCellCreaterTableView;
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
@@ -299,11 +301,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84B7E56D1E45E38500EAB159 /* AutoCellCreaterCollectionView.m in Sources */,
 				84B7E5321E45D48700EAB159 /* ViewController.m in Sources */,
-				84B7E5661E45D52200EAB159 /* AutoCellCreaterCollectionView.m in Sources */,
+				84B7E56E1E45E38500EAB159 /* AutoCellCreaterTableView.m in Sources */,
 				84B7E52F1E45D48700EAB159 /* AppDelegate.m in Sources */,
 				84B7E52C1E45D48700EAB159 /* main.m in Sources */,
-				84B7E5631E45D51900EAB159 /* AutoCellCreaterTableView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -535,6 +537,7 @@
 				84B7E5561E45D48700EAB159 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		84B7E5571E45D48700EAB159 /* Build configuration list for PBXNativeTarget "AutoCellCreaterDemoTests" */ = {
 			isa = XCConfigurationList;
@@ -543,6 +546,7 @@
 				84B7E5591E45D48700EAB159 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		84B7E55A1E45D48700EAB159 /* Build configuration list for PBXNativeTarget "AutoCellCreaterDemoUITests" */ = {
 			isa = XCConfigurationList;
@@ -551,6 +555,7 @@
 				84B7E55C1E45D48700EAB159 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
