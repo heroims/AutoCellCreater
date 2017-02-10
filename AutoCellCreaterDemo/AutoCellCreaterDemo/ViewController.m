@@ -96,6 +96,8 @@
     [tableView1 addCellWithClass:[TestAutoTabelViewCell1 class] bindModel:nil indexPath:[NSIndexPath indexPathForRow:0 inSection:3]];
     [tableView1 addCellWithClass:[TestAutoTabelViewCell1 class] bindModel:nil];
     [self.view addSubview:tableView1];
+    
+    //链式语法UITableView
     tableView1.acct_addCell([TestAutoTabelViewCell1 class],nil,[NSIndexPath indexPathForRow:0 inSection:1]).acct_reloadData();
 
     
@@ -105,11 +107,9 @@
     [tableView2 addCellWithClass:NSClassFromString(@"TestAutoTabelViewCell1") createFilterBlock:nil customSetCellBlock:^(UITableView *tableView, UITableViewCell *tableViewCell, NSIndexPath *indexPath) {
         tableViewCell.textLabel.text=[NSString stringWithFormat:@"%zi-%zi",indexPath.section,indexPath.row];
         [tableViewCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        tableViewCell.acct_bindModel=nil;
     } heightForRowAtIndexPathBlock:^CGFloat(UITableView *tableView, NSIndexPath *indexPath) {
-        if (indexPath.row==1) {
-            return 100;
-        }
-        return 50;
+        return [TestAutoTabelViewCell1 acct_getCellHeightWithModel:nil indexPath:indexPath];
     }];
     [tableView2 setAcct_tableViewDidSelectRowAtIndexPathBlock:^(UITableView *tableView, NSIndexPath *indexPath) {
         NSLog(@"11111");
@@ -147,7 +147,7 @@
     
     [self.view addSubview:mainView];
     
-    
+    //链式语法UICollectionView
     mainView.accc_addCell([TestCell class],nil,[NSIndexPath indexPathForItem:0 inSection:1]).accc_reloadData();
 
 
