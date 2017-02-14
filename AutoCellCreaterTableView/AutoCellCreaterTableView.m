@@ -18,7 +18,7 @@ static const void *acct_indexPathKey = &acct_indexPathKey;
 @dynamic acct_indexPath;
 
 -(void)setAcct_bindModel:(id)acct_bindModel{
-    objc_setAssociatedObject(self, acct_bindModelKey, acct_bindModel, OBJC_ASSOCIATION_RETAIN);
+    objc_setAssociatedObject(self, acct_bindModelKey, acct_bindModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 -(id)acct_bindModel{
@@ -26,7 +26,7 @@ static const void *acct_indexPathKey = &acct_indexPathKey;
 }
 
 -(void)setAcct_indexPath:(NSIndexPath *)acct_indexPath{
-    objc_setAssociatedObject(self, acct_indexPathKey, acct_indexPath, OBJC_ASSOCIATION_RETAIN);
+    objc_setAssociatedObject(self, acct_indexPathKey, acct_indexPath, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 -(NSIndexPath *)acct_indexPath{

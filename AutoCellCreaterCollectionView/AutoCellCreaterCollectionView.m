@@ -19,7 +19,7 @@ static const void *accc_indexPathKey = &accc_indexPathKey;
 @dynamic accc_indexPath;
 
 -(void)setAccc_bindModel:(id)accc_bindModel{
-    objc_setAssociatedObject(self, accc_bindModelKey, accc_bindModel, OBJC_ASSOCIATION_RETAIN);
+    objc_setAssociatedObject(self, accc_bindModelKey, accc_bindModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 -(id)accc_bindModel{
@@ -27,7 +27,7 @@ static const void *accc_indexPathKey = &accc_indexPathKey;
 }
 
 -(void)setAccc_indexPath:(NSIndexPath *)accc_indexPath{
-    objc_setAssociatedObject(self, accc_indexPathKey, accc_indexPath, OBJC_ASSOCIATION_RETAIN);
+    objc_setAssociatedObject(self, accc_indexPathKey, accc_indexPath, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 -(NSIndexPath *)accc_indexPath{
