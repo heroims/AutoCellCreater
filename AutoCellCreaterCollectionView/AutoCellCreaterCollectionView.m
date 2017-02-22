@@ -139,6 +139,7 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
 }
 
 -(void)addCellWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock customSetCellBlock:(accc_customSetCell)customSetCellBlock sizeForItemAtIndexPathBlock:(accc_sizeForItemAtIndexPath)sizeForItemAtIndexPathBlock{
+    self.createrType=AutoCellCreaterCollectionViewType_Disorder;
     [self registerClass:cellClass forCellWithReuseIdentifier:NSStringFromClass(cellClass)];
     NSMutableDictionary *tmpCreaterDic=[[NSMutableDictionary alloc] init];
     if (cellClass) {

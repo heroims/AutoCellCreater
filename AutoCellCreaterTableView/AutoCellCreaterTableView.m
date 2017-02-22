@@ -138,6 +138,7 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
 }
 
 -(void)addCellWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock customSetCellBlock:(acct_customSetCell)customSetCellBlock heightForRowAtIndexPathBlock:(acct_heightForRowAtIndexPath)heightForRowAtIndexPathBlock{
+    self.createrType=AutoCellCreaterTableViewType_Disorder;
     NSMutableDictionary *tmpCreaterDic=[[NSMutableDictionary alloc] init];
     if (cellClass) {
         [tmpCreaterDic setObject:cellClass forKey:@"cellClass"];
