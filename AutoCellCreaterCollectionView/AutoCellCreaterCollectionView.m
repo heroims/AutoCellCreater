@@ -490,7 +490,7 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
         }
         for (NSDictionary *createrDic in self.createrArrary) {
             accc_createFilter filterBlock=createrDic[@"filterBlock"];
-            accc_sizeForItemAtIndexPath accc_sizeForItemAtIndexPathBlock=createrDic[@"accc_sizeForItemAtIndexPathBlock"];
+            accc_sizeForItemAtIndexPath accc_sizeForItemAtIndexPathBlock=createrDic[@"sizeForItemAtIndexPathBlock"];
             if (filterBlock==nil||filterBlock(collectionView,indexPath)) {
                 if (accc_sizeForItemAtIndexPathBlock) {
                     return accc_sizeForItemAtIndexPathBlock(collectionView,collectionViewLayout,indexPath);
