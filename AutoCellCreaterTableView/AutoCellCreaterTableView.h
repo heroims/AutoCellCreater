@@ -74,8 +74,11 @@ typedef NSInteger  (^acct_numberOfRowsInSection)(UITableView *tableView,NSIntege
 -(void)addHeaderWithHeaderView:(UIView*)headerView;
 -(void)addFooterWithFooterView:(UIView*)footerView;
 -(void)addCellWithClass:(Class)cellClass bindModel:(id)bindModel;
+-(void)addCellWithClass:(Class)cellClass bindModel:(id)bindModel customSetCellBlock:(acct_customSetCell)customSetCellBlock;
 -(void)addCellWithClass:(Class)cellClass bindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath;
+-(void)addCellWithClass:(Class)cellClass bindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath customSetCellBlock:(acct_customSetCell)customSetCellBlock;
 -(void)replaceCellWithClass:(Class)cellClass bindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath;
+-(void)replaceCellWithClass:(Class)cellClass bindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath customSetCellBlock:(acct_customSetCell)customSetCellBlock;
 -(void)removeCellWithIndexPath:(NSIndexPath*)indexPath;
 -(void)removeCellsWithSection:(NSInteger)section;
 

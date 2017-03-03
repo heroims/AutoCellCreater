@@ -216,12 +216,19 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
 }
 
 -(void)addCellWithClass:(Class)cellClass bindModel:(id)bindModel{
+    [self addCellWithClass:cellClass bindModel:bindModel customSetCellBlock:nil];
+}
+-(void)addCellWithClass:(Class)cellClass bindModel:(id)bindModel customSetCellBlock:(acct_customSetCell)customSetCellBlock{
     NSMutableArray *tmpCellArr=self.createrDic[@"cell"];
 
-    [self addCellWithClass:cellClass bindModel:bindModel indexPath:[NSIndexPath indexPathForRow:((NSMutableArray*)tmpCellArr[self.createNumberOfSections]).count inSection:self.createNumberOfSections]];
+    [self addCellWithClass:cellClass bindModel:bindModel indexPath:[NSIndexPath indexPathForRow:((NSMutableArray*)tmpCellArr[self.createNumberOfSections]).count inSection:self.createNumberOfSections] customSetCellBlock:customSetCellBlock];
 }
 
--(void)addCellWithClass:(Class)cellClass bindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath{
+-(void)addCellWithClass:(Class)cellClass bindModel:(id)bindModel indexPath:(NSIndexPath *)indexPath{
+    [self addCellWithClass:cellClass bindModel:bindModel indexPath:indexPath customSetCellBlock:nil];
+}
+
+-(void)addCellWithClass:(Class)cellClass bindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath customSetCellBlock:(acct_customSetCell)customSetCellBlock{
     
     NSMutableArray *tmpCellArr=self.createrDic[@"cell"];
     
@@ -231,6 +238,9 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
     }
     if (cellClass) {
         [tmpCreaterDic setObject:cellClass forKey:@"cellClass"];
+    }
+    if (customSetCellBlock) {
+        [tmpCreaterDic setObject:customSetCellBlock forKey:@"customSetCellBlock"];
     }
     
     self.createNumberOfSections=indexPath.section;
@@ -250,6 +260,10 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
 }
 
 -(void)replaceCellWithClass:(Class)cellClass bindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath{
+    [self replaceCellWithClass:cellClass bindModel:bindModel indexPath:indexPath customSetCellBlock:nil];
+}
+
+-(void)replaceCellWithClass:(Class)cellClass bindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath customSetCellBlock:(acct_customSetCell)customSetCellBlock{
     NSMutableArray *tmpCellArr=self.createrDic[@"cell"];
     
     NSMutableDictionary *tmpCreaterDic=[[NSMutableDictionary alloc] init];
@@ -259,6 +273,10 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
     if (cellClass) {
         [tmpCreaterDic setObject:cellClass forKey:@"cellClass"];
     }
+    if (customSetCellBlock) {
+        [tmpCreaterDic setObject:customSetCellBlock forKey:@"customSetCellBlock"];
+    }
+
     if (tmpCellArr.count>indexPath.section&&((NSMutableArray*)tmpCellArr[indexPath.section]).count>indexPath.row) {
         [(NSMutableArray*)tmpCellArr[indexPath.section] replaceObjectAtIndex:indexPath.row withObject:tmpCreaterDic];
     }
@@ -376,7 +394,10 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
                 autoCreateCell = [((UITableViewCell*)[tmpCreaterDic[@"cellClass"] alloc]) initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
             }
             [autoCreateCell _acct_setBindModel:tmpCreaterDic[@"bindModel"] indexPath:indexPath];
-            
+            acct_customSetCell customSetCellBlock=tmpCreaterDic[@"customSetCellBlock"];
+            if (customSetCellBlock) {
+                customSetCellBlock(self,autoCreateCell,indexPath);
+            }
             return autoCreateCell;
         }
         
