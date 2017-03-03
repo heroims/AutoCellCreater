@@ -567,6 +567,12 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
     }
 }
 
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    if (_accc_scrollViewDidScrollBlock) {
+        _accc_scrollViewDidScrollBlock(scrollView);
+    }
+}
+
 #pragma mark - Getter and Setter
 
 -(NSMutableArray *)createrArrary{

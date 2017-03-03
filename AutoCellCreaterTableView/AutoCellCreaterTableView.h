@@ -45,6 +45,9 @@ typedef CGFloat  (^acct_heightForFooterInSection)(UITableView *tableView,NSInteg
 typedef CGFloat  (^acct_heightForHeaderInSection)(UITableView *tableView,NSInteger section);
 typedef NSInteger  (^acct_numberOfSectionsInTableView)(UITableView *tableView);
 typedef NSInteger  (^acct_numberOfRowsInSection)(UITableView *tableView,NSInteger section);
+typedef UITableViewCellEditingStyle  (^acct_editingStyleForRowAtIndexPath)(UITableView *tableView,NSIndexPath *indexPath);
+typedef void  (^acct_commitEditingStyle)(UITableView *tableView,UITableViewCellEditingStyle editingStyle,NSIndexPath *indexPath);
+typedef void  (^acct_scrollViewDidScroll)(UIScrollView *scrollView);
 
 
 @property(nonatomic,assign)AutoCellCreaterTableViewType createrType;
@@ -58,6 +61,9 @@ typedef NSInteger  (^acct_numberOfRowsInSection)(UITableView *tableView,NSIntege
 @property(nonatomic,copy)acct_numberOfRowsInSection acct_numberOfRowsInSectionBlock;
 -(void)setAcct_numberOfRowsInSectionBlock:(acct_numberOfRowsInSection)acct_numberOfRowsInSectionBlock;
 
+@property(nonatomic,copy)acct_scrollViewDidScroll acct_scrollViewDidScrollBlock;
+-(void)setAcct_scrollViewDidScrollBlock:(acct_scrollViewDidScroll)acct_scrollViewDidScrollBlock;
+
 //通用模式调用
 -(void)addHeaderInSection:(NSInteger)section headerView:(UIView*)headerView;
 -(void)replaceHeaderInSection:(NSInteger)section headerView:(UIView*)headerView;
@@ -69,6 +75,8 @@ typedef NSInteger  (^acct_numberOfRowsInSection)(UITableView *tableView,NSIntege
 
 -(void)acct_setViewForHeaderInSectionBlock:(acct_viewForHeaderInSection)viewBlock heightForHeaderInSection:(acct_heightForHeaderInSection)heightBlock;
 -(void)acct_setViewForFooterInSectionBlock:(acct_viewForFooterInSection)viewBlock heightForFooterInSection:(acct_heightForFooterInSection)heightBlock;
+
+-(void)acct_setEditingStyleForRowAtIndexPathBlock:(acct_editingStyleForRowAtIndexPath)editingStyleBlock commitEditingStyleBlock:(acct_commitEditingStyle)commitBlock;
 
 //begin   仅支持AutoCellCreaterType_Order模式调用
 -(void)addHeaderWithHeaderView:(UIView*)headerView;

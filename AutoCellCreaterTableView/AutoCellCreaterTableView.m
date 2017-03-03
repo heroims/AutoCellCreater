@@ -102,6 +102,8 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
 @property(nonatomic,copy)acct_heightForFooterInSection heightForFooterInSectionBlock;
 @property(nonatomic,copy)acct_viewForHeaderInSection viewForHeaderInSectionBlock;
 @property(nonatomic,copy)acct_heightForHeaderInSection heightForHeaderInSectionBlock;
+@property(nonatomic,copy)acct_editingStyleForRowAtIndexPath acct_editingStyleForRowAtIndexPathBlock;
+@property(nonatomic,copy)acct_commitEditingStyle acct_commitEditingStyleBlock;
 
 @end
 
@@ -122,6 +124,11 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
 -(void)acct_setViewForFooterInSectionBlock:(acct_viewForFooterInSection)viewBlock heightForFooterInSection:(acct_heightForFooterInSection)heightBlock{
     self.viewForFooterInSectionBlock=viewBlock;
     self.heightForFooterInSectionBlock=heightBlock;
+}
+
+-(void)acct_setEditingStyleForRowAtIndexPathBlock:(acct_editingStyleForRowAtIndexPath)editingStyleBlock commitEditingStyleBlock:(acct_commitEditingStyle)commitBlock{
+    self.acct_editingStyleForRowAtIndexPathBlock=editingStyleBlock;
+    self.acct_commitEditingStyleBlock=commitBlock;
 }
 
 -(void)addCellWithClass:(Class)cellClass heightForRowAtIndexPathBlock:(acct_heightForRowAtIndexPath)heightForRowAtIndexPathBlock{
@@ -519,6 +526,30 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     if (_acct_tableViewDidSelectRowAtIndexPathBlock) {
         _acct_tableViewDidSelectRowAtIndexPathBlock(tableView,indexPath);
+    }
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (_acct_editingStyleForRowAtIndexPathBlock) {
+        return _acct_editingStyleForRowAtIndexPathBlock(tableView,indexPath);
+    }
+    return UITableViewCellEditingStyleNone;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return (_acct_commitEditingStyleBlock&&_acct_editingStyleForRowAtIndexPathBlock);
+}
+
+-(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (_acct_commitEditingStyleBlock) {
+        _acct_commitEditingStyleBlock(tableView,editingStyle,indexPath);
+    }
+}
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    if (_acct_scrollViewDidScrollBlock) {
+        _acct_scrollViewDidScrollBlock(scrollView);
     }
 }
 

@@ -46,6 +46,8 @@ typedef CGSize  (^accc_referenceSizeForHeaderInSection)(UICollectionView *collec
 typedef NSInteger  (^accc_numberOfSectionsInCollectionView)(UICollectionView *collectionView);
 typedef NSInteger  (^accc_numberOfRowsInSection)(UICollectionView *collectionView,NSInteger section);
 
+typedef void  (^accc_scrollViewDidScroll)(UIScrollView *scrollView);
+
 @property(nonatomic,assign)AutoCellCreaterCollectionViewType createrType;
 
 @property(nonatomic,copy)accc_collectionViewDidSelectRowAtIndexPath accc_collectionViewDidSelectRowAtIndexPathBlock;
@@ -56,6 +58,9 @@ typedef NSInteger  (^accc_numberOfRowsInSection)(UICollectionView *collectionVie
 
 @property(nonatomic,copy)accc_numberOfRowsInSection accc_numberOfRowsInSectionBlock;
 -(void)setAccc_numberOfRowsInSectionBlock:(accc_numberOfRowsInSection)accc_numberOfRowsInSectionBlock;
+
+@property(nonatomic,copy)accc_scrollViewDidScroll accc_scrollViewDidScrollBlock;
+-(void)setAccc_scrollViewDidScrollBlock:(accc_scrollViewDidScroll)accc_scrollViewDidScrollBlock;
 
 //通用模式调用
 -(void)addHeaderInSection:(NSInteger)section headerClass:(Class)headerClass bindModel:(id)bindModel;
