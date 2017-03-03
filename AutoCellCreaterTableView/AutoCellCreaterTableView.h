@@ -83,8 +83,8 @@ typedef NSInteger  (^acct_numberOfRowsInSection)(UITableView *tableView,NSIntege
 -(void)removeCellsWithSection:(NSInteger)section;
 
 //链式语法 tableView.acct_addCell(cellClass,model,indexPath).acct_reloadData();
-- (AutoCellCreaterTableView * (^)(Class cellClass,id bindModel,NSIndexPath *indexPath))acct_addCell;
-- (AutoCellCreaterTableView * (^)(Class cellClass,id bindModel,NSIndexPath *indexPath))acct_replaceCell;
+- (AutoCellCreaterTableView * (^)(Class cellClass,id bindModel,NSIndexPath *indexPath,acct_customSetCell customSetCellBlock))acct_addCell;
+- (AutoCellCreaterTableView * (^)(Class cellClass,id bindModel,NSIndexPath *indexPath,acct_customSetCell customSetCellBlock))acct_replaceCell;
 - (AutoCellCreaterTableView * (^)(NSIndexPath *indexPath))acct_removeCell;
 
 - (void (^)(UITableViewRowAnimation animation))acct_reloadDataAnimation;

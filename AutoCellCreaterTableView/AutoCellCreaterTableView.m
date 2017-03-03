@@ -240,7 +240,7 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
         [tmpCreaterDic setObject:cellClass forKey:@"cellClass"];
     }
     if (customSetCellBlock) {
-        [tmpCreaterDic setObject:customSetCellBlock forKey:@"customSetCellBlock"];
+        [tmpCreaterDic setObject:[customSetCellBlock copy] forKey:@"customSetCellBlock"];
     }
     
     self.createNumberOfSections=indexPath.section;
@@ -274,7 +274,7 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
         [tmpCreaterDic setObject:cellClass forKey:@"cellClass"];
     }
     if (customSetCellBlock) {
-        [tmpCreaterDic setObject:customSetCellBlock forKey:@"customSetCellBlock"];
+        [tmpCreaterDic setObject:[customSetCellBlock copy] forKey:@"customSetCellBlock"];
     }
 
     if (tmpCellArr.count>indexPath.section&&((NSMutableArray*)tmpCellArr[indexPath.section]).count>indexPath.row) {
@@ -310,18 +310,18 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
     [self reloadData];
 }
 
-- (AutoCellCreaterTableView * (^)(Class cellClass,id bindModel,NSIndexPath *indexPath))acct_addCell{
-    AutoCellCreaterTableView *(^acct_addCellBlock)()=^(Class cellClass,id bindModel,NSIndexPath *indexPath){
-        [self addCellWithClass:cellClass bindModel:bindModel indexPath:indexPath];
+- (AutoCellCreaterTableView * (^)(Class cellClass,id bindModel,NSIndexPath *indexPath,acct_customSetCell customSetCellBlock))acct_addCell{
+    AutoCellCreaterTableView *(^acct_addCellBlock)()=^(Class cellClass,id bindModel,NSIndexPath *indexPath,acct_customSetCell customSetCellBlock){
+        [self addCellWithClass:cellClass bindModel:bindModel indexPath:indexPath customSetCellBlock:customSetCellBlock];
         self.toDoAction=[[AutoCellCreaterTableViewActionModel alloc] initWithActionType:AutoCellCreaterTableViewActionType_Add indexPath:indexPath];
         return self;
     };
     return acct_addCellBlock;
 }
 
-- (AutoCellCreaterTableView * (^)(Class cellClass,id bindModel,NSIndexPath *indexPath))acct_replaceCell{
-    AutoCellCreaterTableView *(^acct_replaceCellBlock)()=^(Class cellClass,id bindModel,NSIndexPath *indexPath){
-        [self replaceCellWithClass:cellClass bindModel:bindModel indexPath:indexPath];
+- (AutoCellCreaterTableView * (^)(Class cellClass,id bindModel,NSIndexPath *indexPath,acct_customSetCell customSetCellBlock))acct_replaceCell{
+    AutoCellCreaterTableView *(^acct_replaceCellBlock)()=^(Class cellClass,id bindModel,NSIndexPath *indexPath,acct_customSetCell customSetCellBlock){
+        [self replaceCellWithClass:cellClass bindModel:bindModel indexPath:indexPath customSetCellBlock:customSetCellBlock];
         self.toDoAction=[[AutoCellCreaterTableViewActionModel alloc] initWithActionType:AutoCellCreaterTableViewActionType_Replace indexPath:indexPath];
         return self;
     };
