@@ -82,7 +82,9 @@
     [tableView1 addHeaderWithHeaderView:lbl];
     [tableView1 addCellWithClass:[TestAutoTabelViewCell1 class] bindModel:nil];
     [tableView1 addCellWithClass:[TestAutoTabelViewCell1 class] bindModel:nil];
-    [tableView1 addCellWithClass:[TestAutoTabelViewCell1 class] bindModel:nil];
+    [tableView1 addCellWithClass:[TestAutoTabelViewCell1 class] bindModel:nil customSetCellBlock:^(UITableView *tableView, UITableViewCell *tableViewCell, NSIndexPath *indexPath) {
+        NSLog(@"11111");
+    }];
     [tableView1 addCellWithClass:[TestAutoTabelViewCell1 class] bindModel:nil];
     UILabel *lbl2=[[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 20)];
     lbl2.text=@"sdfasdf";
@@ -98,7 +100,7 @@
     [self.view addSubview:tableView1];
     
     //链式语法UITableView
-    tableView1.acct_addCell([TestAutoTabelViewCell1 class],nil,[NSIndexPath indexPathForRow:0 inSection:1]).acct_reloadData();
+    tableView1.acct_addCell([TestAutoTabelViewCell1 class],nil,[NSIndexPath indexPathForRow:0 inSection:1],nil).acct_reloadData();
 
     
     //逻辑写法UITableView，相当于delegate变成block
@@ -133,7 +135,9 @@
     [mainView addHeaderWithHeaderClass:[TestHeader class] bindModel:nil];
     [mainView addCellWithClass:NSClassFromString(@"TestCell") bindModel:nil];
     [mainView addCellWithClass:NSClassFromString(@"TestCell") bindModel:nil];
-    [mainView addCellWithClass:NSClassFromString(@"TestCell") bindModel:nil];
+    [mainView addCellWithClass:NSClassFromString(@"TestCell") bindModel:nil customSetCellBlock:^(UICollectionView *collectionView, UICollectionViewCell *collectionViewCell, NSIndexPath *indexPath) {
+        NSLog(@"%@",indexPath);
+    }];
     [mainView addCellWithClass:NSClassFromString(@"TestCell") bindModel:nil];
     [mainView addCellWithClass:NSClassFromString(@"TestCell") bindModel:nil];
     [mainView addCellWithClass:NSClassFromString(@"TestCell") bindModel:nil];
@@ -148,7 +152,7 @@
     [self.view addSubview:mainView];
     
     //链式语法UICollectionView
-    mainView.accc_addCell([TestCell class],nil,[NSIndexPath indexPathForItem:0 inSection:1]).accc_reloadData();
+    mainView.accc_addCell([TestCell class],nil,[NSIndexPath indexPathForItem:0 inSection:1],nil).accc_reloadData();
 
 
     // Do any additional setup after loading the view, typically from a nib.
