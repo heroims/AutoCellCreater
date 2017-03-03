@@ -73,14 +73,17 @@ typedef NSInteger  (^accc_numberOfRowsInSection)(UICollectionView *collectionVie
 -(void)addHeaderWithHeaderClass:(Class)headerClass bindModel:(id)bindModel;
 -(void)addFooterWithFooterClass:(Class)footerClass bindModel:(id)bindModel;
 -(void)addCellWithClass:(Class)cellClass bindModel:(id)bindModel;
+-(void)addCellWithClass:(Class)cellClass bindModel:(id)bindModel customSetCellBlock:(accc_customSetCell)customSetCellBlock;
 -(void)addCellWithClass:(Class)cellClass bindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath;
+-(void)addCellWithClass:(Class)cellClass bindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath customSetCellBlock:(accc_customSetCell)customSetCellBlock;
 -(void)replaceCellWithClass:(Class)cellClass bindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath;
+-(void)replaceCellWithClass:(Class)cellClass bindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath customSetCellBlock:(accc_customSetCell)customSetCellBlock;
 -(void)removeCellWithIndexPath:(NSIndexPath*)indexPath;
 -(void)removeCellsWithSection:(NSInteger)section;
 
 //链式语法 collectionView.accc_addCell(cellClass,model,indexPath).accc_reloadData();
-- (AutoCellCreaterCollectionView * (^)(Class cellClass,id bindModel,NSIndexPath *indexPath))accc_addCell;
-- (AutoCellCreaterCollectionView * (^)(Class cellClass,id bindModel,NSIndexPath *indexPath))accc_replaceCell;
+- (AutoCellCreaterCollectionView * (^)(Class cellClass,id bindModel,NSIndexPath *indexPath,accc_customSetCell customSetCellBlock))accc_addCell;
+- (AutoCellCreaterCollectionView * (^)(Class cellClass,id bindModel,NSIndexPath *indexPath,accc_customSetCell customSetCellBlock))accc_replaceCell;
 - (AutoCellCreaterCollectionView * (^)(NSIndexPath *indexPath))accc_removeCell;
 
 - (void (^)())accc_reloadData;

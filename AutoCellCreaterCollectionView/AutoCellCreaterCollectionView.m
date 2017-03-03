@@ -251,12 +251,20 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
 }
 
 -(void)addCellWithClass:(Class)cellClass bindModel:(id)bindModel{
+    [self addCellWithClass:cellClass bindModel:bindModel customSetCellBlock:nil];
+}
+
+-(void)addCellWithClass:(Class)cellClass bindModel:(id)bindModel customSetCellBlock:(accc_customSetCell)customSetCellBlock{
     NSMutableArray *tmpCellArr=self.createrDic[@"cell"];
     
-    [self addCellWithClass:cellClass bindModel:bindModel indexPath:[NSIndexPath indexPathForItem:((NSMutableArray*)tmpCellArr[self.createNumberOfSections]).count inSection:self.createNumberOfSections]];
+    [self addCellWithClass:cellClass bindModel:bindModel indexPath:[NSIndexPath indexPathForItem:((NSMutableArray*)tmpCellArr[self.createNumberOfSections]).count inSection:self.createNumberOfSections] customSetCellBlock:customSetCellBlock];
 }
 
 -(void)addCellWithClass:(Class)cellClass bindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath{
+    [self addCellWithClass:cellClass bindModel:bindModel indexPath:indexPath customSetCellBlock:nil];
+}
+
+-(void)addCellWithClass:(Class)cellClass bindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath customSetCellBlock:(accc_customSetCell)customSetCellBlock{
     NSMutableArray *tmpCellArr=self.createrDic[@"cell"];
 
     NSString *cellIdentifier=NSStringFromClass(cellClass);
@@ -268,6 +276,9 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
     }
     if (cellClass) {
         [tmpCreaterDic setObject:cellClass forKey:@"cellClass"];
+    }
+    if (customSetCellBlock) {
+        [tmpCreaterDic setObject:[customSetCellBlock copy] forKey:@"customSetCellBlock"];
     }
     
     self.createNumberOfSections=indexPath.section;
@@ -287,6 +298,10 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
 }
 
 -(void)replaceCellWithClass:(Class)cellClass bindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath{
+    [self replaceCellWithClass:cellClass bindModel:bindModel indexPath:indexPath customSetCellBlock:nil];
+}
+
+-(void)replaceCellWithClass:(Class)cellClass bindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath customSetCellBlock:(accc_customSetCell)customSetCellBlock{
     NSMutableArray *tmpCellArr=self.createrDic[@"cell"];
     
     NSMutableDictionary *tmpCreaterDic=[[NSMutableDictionary alloc] init];
@@ -295,6 +310,9 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
     }
     if (cellClass) {
         [tmpCreaterDic setObject:cellClass forKey:@"cellClass"];
+    }
+    if (customSetCellBlock) {
+        [tmpCreaterDic setObject:[customSetCellBlock copy] forKey:@"customSetCellBlock"];
     }
     if (tmpCellArr.count>indexPath.section&&((NSMutableArray*)tmpCellArr[indexPath.section]).count>indexPath.item) {
         [(NSMutableArray*)tmpCellArr[indexPath.section] replaceObjectAtIndex:indexPath.item withObject:tmpCreaterDic];
@@ -328,18 +346,18 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
     }
 }
 
-- (AutoCellCreaterCollectionView * (^)(Class cellClass,id bindModel,NSIndexPath *indexPath))accc_addCell{
-    AutoCellCreaterCollectionView *(^accc_addCellBlock)()=^(Class cellClass,id bindModel,NSIndexPath *indexPath){
-        [self addCellWithClass:cellClass bindModel:bindModel indexPath:indexPath];
+- (AutoCellCreaterCollectionView * (^)(Class cellClass,id bindModel,NSIndexPath *indexPath,accc_customSetCell customSetCellBlock))accc_addCell{
+    AutoCellCreaterCollectionView *(^accc_addCellBlock)()=^(Class cellClass,id bindModel,NSIndexPath *indexPath,accc_customSetCell customSetCellBlock){
+        [self addCellWithClass:cellClass bindModel:bindModel indexPath:indexPath customSetCellBlock:customSetCellBlock];
         self.toDoAction=[[AutoCellCreaterCollectionViewActionModel alloc] initWithActionType:AutoCellCreaterCollectionViewActionType_Add indexPath:indexPath];
         return self;
     };
     return accc_addCellBlock;
 }
 
-- (AutoCellCreaterCollectionView * (^)(Class cellClass,id bindModel,NSIndexPath *indexPath))accc_replaceCell{
-    AutoCellCreaterCollectionView *(^accc_replaceCellBlock)()=^(Class cellClass,id bindModel,NSIndexPath *indexPath){
-        [self replaceCellWithClass:cellClass bindModel:bindModel indexPath:indexPath];
+- (AutoCellCreaterCollectionView * (^)(Class cellClass,id bindModel,NSIndexPath *indexPath,accc_customSetCell customSetCellBlock))accc_replaceCell{
+    AutoCellCreaterCollectionView *(^accc_replaceCellBlock)()=^(Class cellClass,id bindModel,NSIndexPath *indexPath,accc_customSetCell customSetCellBlock){
+        [self replaceCellWithClass:cellClass bindModel:bindModel indexPath:indexPath customSetCellBlock:customSetCellBlock];
         self.toDoAction=[[AutoCellCreaterCollectionViewActionModel alloc] initWithActionType:AutoCellCreaterCollectionViewActionType_Replace indexPath:indexPath];
         return self;
     };
@@ -393,10 +411,16 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
             NSMutableDictionary *tmpCreaterDic=((NSMutableArray*)tmpCellArr[indexPath.section])[indexPath.item];
             NSString *cellIdentifier=NSStringFromClass(tmpCreaterDic[@"cellClass"]);
             
-            UICollectionViewCell *cell=[self dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
-            [cell _accc_setBindModel:tmpCreaterDic[@"bindModel"] indexPath:indexPath];
+            UICollectionViewCell *autoCreateCell=[self dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
+            [autoCreateCell _accc_setBindModel:tmpCreaterDic[@"bindModel"] indexPath:indexPath];
             
-            return cell;
+            accc_customSetCell customSetCellBlock=tmpCreaterDic[@"customSetCellBlock"];
+
+            if (customSetCellBlock) {
+                customSetCellBlock(self,autoCreateCell,indexPath);
+            }
+
+            return autoCreateCell;
         }
     }
     
