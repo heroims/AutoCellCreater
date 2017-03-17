@@ -82,7 +82,7 @@
     [tableView1 addHeaderWithHeaderView:lbl];
     [tableView1 addCellWithClass:[TestAutoTabelViewCell1 class] bindModel:nil];
     [tableView1 addCellWithClass:[TestAutoTabelViewCell1 class] bindModel:nil];
-    [tableView1 addCellWithClass:[TestAutoTabelViewCell1 class] bindModel:nil customSetCellBlock:^(UITableView *tableView, UITableViewCell *tableViewCell, NSIndexPath *indexPath) {
+    [tableView1 addCellWithClass:[TestAutoTabelViewCell1 class] bindModel:nil customSetCellBlock:^(UITableView *tableView, UIView *tableViewCell, NSIndexPath *indexPath) {
         NSLog(@"11111");
     }];
     [tableView1 addCellWithClass:[TestAutoTabelViewCell1 class] bindModel:nil];
@@ -106,10 +106,10 @@
     //逻辑写法UITableView，相当于delegate变成block
     AutoCellCreaterTableView *tableView2=[[AutoCellCreaterTableView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width/2., 0, self.view.bounds.size.width/2., self.view.bounds.size.height/2.) style:UITableViewStylePlain];
     tableView2.createrType=AutoCellCreaterTableViewType_Disorder;
-    [tableView2 addCellWithClass:NSClassFromString(@"TestAutoTabelViewCell1") createFilterBlock:nil customSetCellBlock:^(UITableView *tableView, UITableViewCell *tableViewCell, NSIndexPath *indexPath) {
-        tableViewCell.textLabel.text=[NSString stringWithFormat:@"%zi-%zi",indexPath.section,indexPath.row];
-        [tableViewCell setSelectionStyle:UITableViewCellSelectionStyleNone];
-        tableViewCell.acct_bindModel=nil;
+    [tableView2 addCellWithClass:NSClassFromString(@"TestAutoTabelViewCell1") createFilterBlock:nil customSetCellBlock:^(UIView *tableView, UIView *tableViewCell, NSIndexPath *indexPath) {
+        ((UITableViewCell*)tableViewCell).textLabel.text=[NSString stringWithFormat:@"%zi-%zi",indexPath.section,indexPath.row];
+        [(UITableViewCell*)tableViewCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        ((UITableViewCell*)tableViewCell).acct_bindModel=nil;
     } heightForRowAtIndexPathBlock:^CGFloat(UITableView *tableView, NSIndexPath *indexPath) {
         return [TestAutoTabelViewCell1 acct_getCellHeightWithModel:nil indexPath:indexPath];
     }];
@@ -135,7 +135,7 @@
     [mainView addHeaderWithHeaderClass:[TestHeader class] bindModel:nil];
     [mainView addCellWithClass:NSClassFromString(@"TestCell") bindModel:nil];
     [mainView addCellWithClass:NSClassFromString(@"TestCell") bindModel:nil];
-    [mainView addCellWithClass:NSClassFromString(@"TestCell") bindModel:nil customSetCellBlock:^(UICollectionView *collectionView, UICollectionViewCell *collectionViewCell, NSIndexPath *indexPath) {
+    [mainView addCellWithClass:NSClassFromString(@"TestCell") bindModel:nil customSetCellBlock:^(UICollectionView *collectionView, UICollectionReusableView *collectionViewCell, NSIndexPath *indexPath) {
         NSLog(@"%@",indexPath);
     }];
     [mainView addCellWithClass:NSClassFromString(@"TestCell") bindModel:nil];
