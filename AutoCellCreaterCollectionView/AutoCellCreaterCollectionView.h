@@ -33,16 +33,12 @@ typedef enum AutoCellCreaterCollectionViewType:NSInteger{
 @interface AutoCellCreaterCollectionView : UICollectionView
 
 typedef BOOL  (^accc_createFilter)(UICollectionView *collectionView,NSIndexPath *indexPath);
-typedef void  (^accc_customSetCell)(UICollectionView *collectionView,UICollectionViewCell *collectionViewCell,NSIndexPath *indexPath);
+typedef void  (^accc_customSetCell)(UICollectionView *collectionView,UICollectionReusableView *collectionViewCell,NSIndexPath *indexPath);
 
 typedef void  (^accc_collectionViewDidSelectRowAtIndexPath)(UICollectionView *collectionView,NSIndexPath *indexPath);
 
 typedef CGSize  (^accc_sizeForItemAtIndexPath)(UICollectionView *collectionView,UICollectionViewLayout *collectionViewLayout,NSIndexPath *indexPath);
 
-typedef UICollectionReusableView *  (^accc_viewForFooterInSection)(UICollectionView *collectionView,NSInteger section);
-typedef UICollectionReusableView *  (^accc_viewForHeaderInSection)(UICollectionView *collectionView,NSInteger section);
-typedef CGSize  (^accc_referenceSizeForFooterInSection)(UICollectionView *collectionView,UICollectionViewLayout *collectionViewLayout,NSInteger section);
-typedef CGSize  (^accc_referenceSizeForHeaderInSection)(UICollectionView *collectionView,UICollectionViewLayout *collectionViewLayout,NSInteger section);
 typedef NSInteger  (^accc_numberOfSectionsInCollectionView)(UICollectionView *collectionView);
 typedef NSInteger  (^accc_numberOfRowsInSection)(UICollectionView *collectionView,NSInteger section);
 
@@ -71,9 +67,6 @@ typedef void  (^accc_scrollViewDidScroll)(UIScrollView *scrollView);
 -(void)replaceFooterInSection:(NSInteger)section footerClass:(Class)footerClass bindModel:(id)bindModel;
 -(void)removeFooterInSection:(NSInteger)section;
 
--(void)accc_setViewForHeaderInSectionBlock:(accc_viewForHeaderInSection)viewBlock sizeForHeaderInSection:(accc_referenceSizeForHeaderInSection)sizeBlock;
--(void)accc_setViewForFooterInSectionBlock:(accc_viewForFooterInSection)viewBlock sizeForFooterInSection:(accc_referenceSizeForFooterInSection)sizeBlock;
-
 //begin   仅支持AutoCellCreaterType_Order模式调用
 -(void)addHeaderWithHeaderClass:(Class)headerClass bindModel:(id)bindModel;
 -(void)addFooterWithFooterClass:(Class)footerClass bindModel:(id)bindModel;
@@ -99,5 +92,8 @@ typedef void  (^accc_scrollViewDidScroll)(UIScrollView *scrollView);
 -(void)addCellWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock sizeForItemAtIndexPathBlock:(accc_sizeForItemAtIndexPath)sizeForItemAtIndexPathBlock;
 -(void)addCellWithClass:(Class)cellClass customSetCellBlock:(accc_customSetCell)customSetCellBlock sizeForItemAtIndexPathBlock:(accc_sizeForItemAtIndexPath)sizeForItemAtIndexPathBlock;
 -(void)addCellWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock customSetCellBlock:(accc_customSetCell)customSetCellBlock sizeForItemAtIndexPathBlock:(accc_sizeForItemAtIndexPath)sizeForItemAtIndexPathBlock;
+
+-(void)addHeaderWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock customSetCellBlock:(accc_customSetCell)customSetCellBlock sizeForItemAtIndexPathBlock:(accc_sizeForItemAtIndexPath)sizeForItemAtIndexPathBlock;
+-(void)addFooterWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock customSetCellBlock:(accc_customSetCell)customSetCellBlock sizeForItemAtIndexPathBlock:(accc_sizeForItemAtIndexPath)sizeForItemAtIndexPathBlock;
 
 @end

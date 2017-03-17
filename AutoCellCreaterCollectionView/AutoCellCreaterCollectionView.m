@@ -91,18 +91,13 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
     LastAddACCCollectionViewSectionType lastAddSectionType;
 }
 
-@property(nonatomic,strong)NSMutableArray *createrArrary;
+@property(nonatomic,strong)NSMutableDictionary *createrDisorderDic;
 
 @property(nonatomic,strong)NSMutableDictionary *createrDic;
 
 @property(nonatomic,assign)NSInteger createNumberOfSections;
 
 @property(nonatomic,strong)AutoCellCreaterCollectionViewActionModel *toDoAction;
-
-@property(nonatomic,copy)accc_viewForFooterInSection viewForFooterInSectionBlock;
-@property(nonatomic,copy)accc_referenceSizeForFooterInSection sizeForFooterInSectionBlock;
-@property(nonatomic,copy)accc_viewForHeaderInSection viewForHeaderInSectionBlock;
-@property(nonatomic,copy)accc_referenceSizeForHeaderInSection sizeForHeaderInSectionBlock;
 
 @end
 
@@ -116,13 +111,51 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
     return self;
 }
 
--(void)accc_setViewForHeaderInSectionBlock:(accc_viewForHeaderInSection)viewBlock sizeForHeaderInSection:(accc_referenceSizeForHeaderInSection)sizeBlock{
-    self.viewForHeaderInSectionBlock=viewBlock;
-    self.sizeForHeaderInSectionBlock=sizeBlock;
+-(void)addHeaderWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock customSetCellBlock:(accc_customSetCell)customSetCellBlock sizeForItemAtIndexPathBlock:(accc_sizeForItemAtIndexPath)sizeForItemAtIndexPathBlock{
+    self.createrType=AutoCellCreaterCollectionViewType_Disorder;
+    [self registerClass:cellClass forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass(cellClass)];
+    NSMutableDictionary *tmpCreaterDic=[[NSMutableDictionary alloc] init];
+    if (cellClass) {
+        [tmpCreaterDic setObject:cellClass forKey:@"cellClass"];
+    }
+    if (filterBlock) {
+        [tmpCreaterDic setObject:[filterBlock copy] forKey:@"filterBlock"];
+    }
+    if (customSetCellBlock) {
+        [tmpCreaterDic setObject:[customSetCellBlock copy] forKey:@"customSetCellBlock"];
+    }
+    if (sizeForItemAtIndexPathBlock) {
+        [tmpCreaterDic setObject:[sizeForItemAtIndexPathBlock copy] forKey:@"sizeForItemAtIndexPathBlock"];
+    }
+    
+    NSMutableArray *tmpCreaterArray=self.createrDisorderDic[@"header"];
+    [tmpCreaterArray addObject:tmpCreaterDic];
+    
+    [self.createrDisorderDic setObject:tmpCreaterArray forKey:@"header" ];
+    
+    
 }
--(void)accc_setViewForFooterInSectionBlock:(accc_viewForFooterInSection)viewBlock sizeForFooterInSection:(accc_referenceSizeForFooterInSection)sizeBlock{
-    self.viewForFooterInSectionBlock=viewBlock;
-    self.sizeForFooterInSectionBlock=sizeBlock;
+-(void)addFooterWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock customSetCellBlock:(accc_customSetCell)customSetCellBlock sizeForItemAtIndexPathBlock:(accc_sizeForItemAtIndexPath)sizeForItemAtIndexPathBlock{
+    self.createrType=AutoCellCreaterCollectionViewType_Disorder;
+    [self registerClass:cellClass forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:NSStringFromClass(cellClass)];
+    NSMutableDictionary *tmpCreaterDic=[[NSMutableDictionary alloc] init];
+    if (cellClass) {
+        [tmpCreaterDic setObject:cellClass forKey:@"cellClass"];
+    }
+    if (filterBlock) {
+        [tmpCreaterDic setObject:[filterBlock copy] forKey:@"filterBlock"];
+    }
+    if (customSetCellBlock) {
+        [tmpCreaterDic setObject:[customSetCellBlock copy] forKey:@"customSetCellBlock"];
+    }
+    if (sizeForItemAtIndexPathBlock) {
+        [tmpCreaterDic setObject:[sizeForItemAtIndexPathBlock copy] forKey:@"sizeForItemAtIndexPathBlock"];
+    }
+    NSMutableArray *tmpCreaterArray=self.createrDisorderDic[@"footer"];
+    [tmpCreaterArray addObject:tmpCreaterDic];
+    
+    [self.createrDisorderDic setObject:tmpCreaterArray forKey:@"footer" ];
+    
 }
 
 -(void)addCellWithClass:(Class)cellClass sizeForItemAtIndexPathBlock:(accc_sizeForItemAtIndexPath)sizeForItemAtIndexPathBlock{
@@ -154,8 +187,10 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
     if (sizeForItemAtIndexPathBlock) {
         [tmpCreaterDic setObject:[sizeForItemAtIndexPathBlock copy] forKey:@"sizeForItemAtIndexPathBlock"];
     }
+    NSMutableArray *tmpCreaterArray=self.createrDisorderDic[@"cell"];
+    [tmpCreaterArray addObject:tmpCreaterDic];
     
-    [self.createrArrary addObject:tmpCreaterDic];
+    [self.createrDisorderDic setObject:tmpCreaterArray forKey:@"cell" ];
 }
 
 -(void)addHeaderWithHeaderClass:(Class)headerClass bindModel:(id)bindModel{
@@ -266,7 +301,7 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
 
 -(void)addCellWithClass:(Class)cellClass bindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath customSetCellBlock:(accc_customSetCell)customSetCellBlock{
     NSMutableArray *tmpCellArr=self.createrDic[@"cell"];
-
+    
     NSString *cellIdentifier=NSStringFromClass(cellClass);
     [self registerClass:cellClass forCellWithReuseIdentifier:cellIdentifier];
     
@@ -415,20 +450,21 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
             [autoCreateCell _accc_setBindModel:tmpCreaterDic[@"bindModel"] indexPath:indexPath];
             
             accc_customSetCell customSetCellBlock=tmpCreaterDic[@"customSetCellBlock"];
-
+            
             if (customSetCellBlock) {
                 customSetCellBlock(self,autoCreateCell,indexPath);
             }
-
+            
             return autoCreateCell;
         }
     }
     
     if (self.createrType==AutoCellCreaterCollectionViewType_Disorder) {
-        if (self.createrArrary.count<1) {
+        NSArray *createrArray=self.createrDisorderDic[@"cell"];
+        if (createrArray.count<1) {
             return nil;
         }
-        for (NSDictionary *createrDic in self.createrArrary) {
+        for (NSDictionary *createrDic in createrArray) {
             accc_createFilter filterBlock=createrDic[@"filterBlock"];
             accc_customSetCell customSetCellBlock=createrDic[@"customSetCellBlock"];
             
@@ -453,9 +489,27 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
     UICollectionReusableView *reusableview = nil;
     
     if (kind == UICollectionElementKindSectionHeader) {
-        if (_viewForHeaderInSectionBlock) {
-            reusableview=_viewForHeaderInSectionBlock(collectionView,indexPath.section);
-            return reusableview;
+        if (self.createrType==AutoCellCreaterCollectionViewType_Disorder) {
+            NSArray *createrArray=self.createrDisorderDic[@"header"];
+            if (createrArray.count<1) {
+                return nil;
+            }
+            for (NSDictionary *createrDic in createrArray) {
+                accc_createFilter filterBlock=createrDic[@"filterBlock"];
+                accc_customSetCell customSetCellBlock=createrDic[@"customSetCellBlock"];
+                
+                if (filterBlock==nil||filterBlock(collectionView,indexPath)) {
+                    Class cellClass=createrDic[@"cellClass"];
+                    NSString *cellIdentifier=NSStringFromClass(cellClass);
+                    reusableview = [self dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:cellIdentifier forIndexPath:indexPath];
+                    if (customSetCellBlock) {
+                        customSetCellBlock(self,reusableview,indexPath);
+                    }
+                    
+                    return reusableview;
+                }
+            }
+            
         }
         
         NSString *indexPathString=[NSString stringWithFormat:@"header-%zi",indexPath.section];
@@ -469,10 +523,29 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
         
     }
     if (kind == UICollectionElementKindSectionFooter) {
-        if (_viewForFooterInSectionBlock) {
-            reusableview=_viewForFooterInSectionBlock(collectionView,indexPath.section);
-            return reusableview;
+        if (self.createrType==AutoCellCreaterCollectionViewType_Disorder) {
+            NSArray *createrArray=self.createrDisorderDic[@"footer"];
+            if (createrArray.count<1) {
+                return nil;
+            }
+            for (NSDictionary *createrDic in createrArray) {
+                accc_createFilter filterBlock=createrDic[@"filterBlock"];
+                accc_customSetCell customSetCellBlock=createrDic[@"customSetCellBlock"];
+                
+                if (filterBlock==nil||filterBlock(collectionView,indexPath)) {
+                    Class cellClass=createrDic[@"cellClass"];
+                    NSString *cellIdentifier=NSStringFromClass(cellClass);
+                    reusableview = [self dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:cellIdentifier forIndexPath:indexPath];
+                    if (customSetCellBlock) {
+                        customSetCellBlock(self,reusableview,indexPath);
+                    }
+                    
+                    return reusableview;
+                }
+            }
+            
         }
+        
         NSString *indexPathString=[NSString stringWithFormat:@"footer-%zi",indexPath.section];
         NSMutableDictionary *tmpCreaterDic=[self.createrDic objectForKey:indexPathString];
         NSString *footIdentifier=NSStringFromClass(tmpCreaterDic[@"footerClass"]);
@@ -495,7 +568,7 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
     if (tmpCellArr.count>section) {
         return ((NSMutableArray*)tmpCellArr[section]).count;
     }
-
+    
     return 0;
 }
 
@@ -509,10 +582,12 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
 
 -(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (self.createrType==AutoCellCreaterCollectionViewType_Disorder) {
-        if (self.createrArrary.count<1) {
+        NSArray *createrArray=self.createrDisorderDic[@"cell"];
+        
+        if (createrArray.count<1) {
             return CGSizeZero;
         }
-        for (NSDictionary *createrDic in self.createrArrary) {
+        for (NSDictionary *createrDic in createrArray) {
             accc_createFilter filterBlock=createrDic[@"filterBlock"];
             accc_sizeForItemAtIndexPath accc_sizeForItemAtIndexPathBlock=createrDic[@"sizeForItemAtIndexPathBlock"];
             if (filterBlock==nil||filterBlock(collectionView,indexPath)) {
@@ -535,8 +610,22 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section{
     CGSize headerSize=CGSizeZero;
-    if (_sizeForHeaderInSectionBlock) {
-        headerSize=_sizeForHeaderInSectionBlock(collectionView,collectionViewLayout,section);
+    
+    if (self.createrType==AutoCellCreaterCollectionViewType_Disorder) {
+        NSArray *createrArray=self.createrDisorderDic[@"header"];
+        
+        if (createrArray.count<1) {
+            return CGSizeZero;
+        }
+        for (NSDictionary *createrDic in createrArray) {
+            accc_createFilter filterBlock=createrDic[@"filterBlock"];
+            accc_sizeForItemAtIndexPath accc_sizeForItemAtIndexPathBlock=createrDic[@"sizeForItemAtIndexPathBlock"];
+            if (filterBlock==nil||filterBlock(collectionView,[NSIndexPath indexPathForItem:0 inSection:section])) {
+                if (accc_sizeForItemAtIndexPathBlock) {
+                    headerSize = accc_sizeForItemAtIndexPathBlock(collectionView,collectionViewLayout,[NSIndexPath indexPathForItem:0 inSection:section]);
+                }
+            }
+        }
     }
     else{
         NSString *indexPathString=[NSString stringWithFormat:@"header-%zi",section];
@@ -549,8 +638,21 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section{
     CGSize footerSize=CGSizeZero;
-    if (_sizeForFooterInSectionBlock) {
-        footerSize=_sizeForFooterInSectionBlock(collectionView,collectionViewLayout,section);
+    if (self.createrType==AutoCellCreaterCollectionViewType_Disorder) {
+        NSArray *createrArray=self.createrDisorderDic[@"footer"];
+        
+        if (createrArray.count<1) {
+            return CGSizeZero;
+        }
+        for (NSDictionary *createrDic in createrArray) {
+            accc_createFilter filterBlock=createrDic[@"filterBlock"];
+            accc_sizeForItemAtIndexPath accc_sizeForItemAtIndexPathBlock=createrDic[@"sizeForItemAtIndexPathBlock"];
+            if (filterBlock==nil||filterBlock(collectionView,[NSIndexPath indexPathForItem:0 inSection:section])) {
+                if (accc_sizeForItemAtIndexPathBlock) {
+                    footerSize = accc_sizeForItemAtIndexPathBlock(collectionView,collectionViewLayout,[NSIndexPath indexPathForItem:0 inSection:section]);
+                }
+            }
+        }
     }
     else{
         NSString *indexPathString=[NSString stringWithFormat:@"footer-%zi",section];
@@ -575,11 +677,24 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
 
 #pragma mark - Getter and Setter
 
--(NSMutableArray *)createrArrary{
-    if (!_createrArrary) {
-        _createrArrary=[[NSMutableArray alloc] init];
+-(NSMutableDictionary *)createrDisorderDic{
+    if (!_createrDisorderDic) {
+        _createrDisorderDic=[[NSMutableDictionary alloc] init];
+        
+        NSMutableArray *cellArr=[[NSMutableArray alloc] init];
+        
+        [_createrDisorderDic setObject:cellArr forKey:@"cell"];
+        
+        NSMutableArray *headerArr=[[NSMutableArray alloc] init];
+        
+        [_createrDisorderDic setObject:headerArr forKey:@"header"];
+        
+        NSMutableArray *footerArr=[[NSMutableArray alloc] init];
+        
+        [_createrDisorderDic setObject:footerArr forKey:@"footer"];
+        
     }
-    return _createrArrary;
+    return _createrDisorderDic;
 }
 
 -(NSMutableDictionary *)createrDic{
@@ -588,7 +703,7 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
         NSMutableArray *cellArr=[[NSMutableArray alloc] init];
         [cellArr addObject:[[NSMutableArray alloc] init]];
         [_createrDic setObject:cellArr forKey:@"cell"];
-
+        
     }
     return _createrDic;
 }
