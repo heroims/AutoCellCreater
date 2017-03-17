@@ -33,7 +33,7 @@ typedef enum AutoCellCreaterTableViewType:NSInteger{
 @interface AutoCellCreaterTableView : UITableView
 
 typedef BOOL  (^acct_createFilter)(UITableView *tableView,NSIndexPath *indexPath);
-typedef void  (^acct_customSetCell)(UITableView *tableView,UITableViewCell *tableViewCell,NSIndexPath *indexPath);
+typedef void  (^acct_customSetCell)(UITableView *tableView,UIView *tableViewCell,NSIndexPath *indexPath);
 
 typedef void  (^acct_tableViewDidSelectRowAtIndexPath)(UITableView *tableView,NSIndexPath *indexPath);
 
@@ -106,6 +106,8 @@ typedef void  (^acct_scrollViewDidScroll)(UIScrollView *scrollView);
 -(void)addCellWithClass:(Class)cellClass customSetCellBlock:(acct_customSetCell)customSetCellBlock heightForRowAtIndexPathBlock:(acct_heightForRowAtIndexPath)heightForRowAtIndexPathBlock;
 -(void)addCellWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock customSetCellBlock:(acct_customSetCell)customSetCellBlock heightForRowAtIndexPathBlock:(acct_heightForRowAtIndexPath)heightForRowAtIndexPathBlock;
 
+-(void)addHeaderWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock customSetCellBlock:(acct_customSetCell)customSetCellBlock heightForRowAtIndexPathBlock:(acct_heightForRowAtIndexPath)heightForRowAtIndexPathBlock;
+-(void)addFooterWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock customSetCellBlock:(acct_customSetCell)customSetCellBlock heightForRowAtIndexPathBlock:(acct_heightForRowAtIndexPath)heightForRowAtIndexPathBlock;
 
 
 @end

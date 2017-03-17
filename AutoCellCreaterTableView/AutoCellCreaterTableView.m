@@ -90,7 +90,7 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
     LastAddACCTableViewSectionType lastAddSectionType;
 }
 
-@property(nonatomic,strong)NSMutableArray *createrArrary;
+@property(nonatomic,strong)NSMutableDictionary *createrDisorderDic;
 
 @property(nonatomic,strong)NSMutableDictionary *createrDic;
 
@@ -108,6 +108,10 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
 @end
 
 @implementation AutoCellCreaterTableView
+
+static NSString *const AutoCellCreaterTableViewItemTypeCell = @"AutoCellCreaterTableViewItemTypeCell";
+static NSString *const AutoCellCreaterTableViewItemTypeHeader = @"AutoCellCreaterTableViewItemTypeHeader";
+static NSString *const AutoCellCreaterTableViewItemTypeFooter = @"AutoCellCreaterTableViewItemTypeFooter";
 
 -(id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style{
     if (self=[super initWithFrame:frame style:style]) {
@@ -131,6 +135,15 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
     self.acct_commitEditingStyleBlock=commitBlock;
 }
 
+
+-(void)addHeaderWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock customSetCellBlock:(acct_customSetCell)customSetCellBlock heightForRowAtIndexPathBlock:(acct_heightForRowAtIndexPath)heightForRowAtIndexPathBlock{
+    [self addCellWithClass:cellClass createFilterBlock:filterBlock customSetCellBlock:customSetCellBlock heightForRowAtIndexPathBlock:heightForRowAtIndexPathBlock cellType:AutoCellCreaterTableViewItemTypeHeader];
+}
+
+-(void)addFooterWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock customSetCellBlock:(acct_customSetCell)customSetCellBlock heightForRowAtIndexPathBlock:(acct_heightForRowAtIndexPath)heightForRowAtIndexPathBlock{
+    [self addCellWithClass:cellClass createFilterBlock:filterBlock customSetCellBlock:customSetCellBlock heightForRowAtIndexPathBlock:heightForRowAtIndexPathBlock cellType:AutoCellCreaterTableViewItemTypeFooter];
+}
+
 -(void)addCellWithClass:(Class)cellClass heightForRowAtIndexPathBlock:(acct_heightForRowAtIndexPath)heightForRowAtIndexPathBlock{
     
     [self addCellWithClass:cellClass createFilterBlock:nil customSetCellBlock:nil heightForRowAtIndexPathBlock:heightForRowAtIndexPathBlock];
@@ -144,8 +157,21 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
     [self addCellWithClass:cellClass createFilterBlock:nil customSetCellBlock:customSetCellBlock heightForRowAtIndexPathBlock:heightForRowAtIndexPathBlock];
 }
 
--(void)addCellWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock customSetCellBlock:(acct_customSetCell)customSetCellBlock heightForRowAtIndexPathBlock:(acct_heightForRowAtIndexPath)heightForRowAtIndexPathBlock{
+-(void)addCellWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock customSetCellBlock:(acct_customSetCell)customSetCellBlock heightForRowAtIndexPathBlock:(acct_heightForRowAtIndexPath)heightForRowAtIndexPathBlock {
+    [self addCellWithClass:cellClass createFilterBlock:filterBlock customSetCellBlock:customSetCellBlock heightForRowAtIndexPathBlock:heightForRowAtIndexPathBlock cellType:AutoCellCreaterTableViewItemTypeCell];
+}
+-(void)addCellWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock customSetCellBlock:(acct_customSetCell)customSetCellBlock heightForRowAtIndexPathBlock:(acct_heightForRowAtIndexPath)heightForRowAtIndexPathBlock cellType:(NSString*)cellType{
     self.createrType=AutoCellCreaterTableViewType_Disorder;
+    if ([cellType isEqualToString:AutoCellCreaterTableViewItemTypeCell]) {
+        [self registerClass:cellClass forCellReuseIdentifier:NSStringFromClass(cellClass)];
+    }
+    if ([cellType isEqualToString:AutoCellCreaterTableViewItemTypeFooter]) {
+        [self registerClass:cellClass forHeaderFooterViewReuseIdentifier:NSStringFromClass(cellClass)];
+    }
+    if ([cellType isEqualToString:AutoCellCreaterTableViewItemTypeHeader]) {
+        [self registerClass:cellClass forHeaderFooterViewReuseIdentifier:NSStringFromClass(cellClass)];
+    }
+    
     NSMutableDictionary *tmpCreaterDic=[[NSMutableDictionary alloc] init];
     if (cellClass) {
         [tmpCreaterDic setObject:cellClass forKey:@"cellClass"];
@@ -160,7 +186,10 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
         [tmpCreaterDic setObject:[heightForRowAtIndexPathBlock copy] forKey:@"heightForRowAtIndexPathBlock"];
     }
     
-    [self.createrArrary addObject:tmpCreaterDic];
+    NSMutableArray *tmpCreaterArray=self.createrDisorderDic[cellType];
+    [tmpCreaterArray addObject:tmpCreaterDic];
+    
+    [self.createrDisorderDic setObject:tmpCreaterArray forKey:cellType];
 }
 
 -(void)addHeaderWithHeaderView:(UIView*)headerView{
@@ -182,7 +211,7 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
 
 -(void)replaceHeaderInSection:(NSInteger)section headerView:(UIView*)headerView{
     self.createNumberOfSections=section;
-
+    
     NSString *indexPathString=[NSString stringWithFormat:@"header-%zi",section];
     [self.createrDic setObject:headerView forKey:indexPathString];
 }
@@ -212,7 +241,7 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
 
 -(void)replaceFooterInSection:(NSInteger)section footerView:(UIView*)footerView{
     self.createNumberOfSections=section;
-
+    
     NSString *indexPathString=[NSString stringWithFormat:@"footer-%zi",section];
     [self.createrDic setObject:footerView forKey:indexPathString];
 }
@@ -226,8 +255,8 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
     [self addCellWithClass:cellClass bindModel:bindModel customSetCellBlock:nil];
 }
 -(void)addCellWithClass:(Class)cellClass bindModel:(id)bindModel customSetCellBlock:(acct_customSetCell)customSetCellBlock{
-    NSMutableArray *tmpCellArr=self.createrDic[@"cell"];
-
+    NSMutableArray *tmpCellArr=self.createrDic[AutoCellCreaterTableViewItemTypeCell];
+    
     [self addCellWithClass:cellClass bindModel:bindModel indexPath:[NSIndexPath indexPathForRow:((NSMutableArray*)tmpCellArr[self.createNumberOfSections]).count inSection:self.createNumberOfSections] customSetCellBlock:customSetCellBlock];
 }
 
@@ -237,7 +266,7 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
 
 -(void)addCellWithClass:(Class)cellClass bindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath customSetCellBlock:(acct_customSetCell)customSetCellBlock{
     
-    NSMutableArray *tmpCellArr=self.createrDic[@"cell"];
+    NSMutableArray *tmpCellArr=self.createrDic[AutoCellCreaterTableViewItemTypeCell];
     
     NSMutableDictionary *tmpCreaterDic=[[NSMutableDictionary alloc] init];
     if (bindModel) {
@@ -253,7 +282,7 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
     self.createNumberOfSections=indexPath.section;
     if (((NSMutableArray*)tmpCellArr[indexPath.section]).count>indexPath.row) {
         [tmpCellArr[indexPath.section] insertObject:tmpCreaterDic atIndex:indexPath.row];
-
+        
     }
     else if(((NSMutableArray*)tmpCellArr[indexPath.section]).count==indexPath.row){
         [tmpCellArr[indexPath.section] addObject:tmpCreaterDic];
@@ -271,7 +300,7 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
 }
 
 -(void)replaceCellWithClass:(Class)cellClass bindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath customSetCellBlock:(acct_customSetCell)customSetCellBlock{
-    NSMutableArray *tmpCellArr=self.createrDic[@"cell"];
+    NSMutableArray *tmpCellArr=self.createrDic[AutoCellCreaterTableViewItemTypeCell];
     
     NSMutableDictionary *tmpCreaterDic=[[NSMutableDictionary alloc] init];
     if (bindModel) {
@@ -283,7 +312,7 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
     if (customSetCellBlock) {
         [tmpCreaterDic setObject:[customSetCellBlock copy] forKey:@"customSetCellBlock"];
     }
-
+    
     if (tmpCellArr.count>indexPath.section&&((NSMutableArray*)tmpCellArr[indexPath.section]).count>indexPath.row) {
         [(NSMutableArray*)tmpCellArr[indexPath.section] replaceObjectAtIndex:indexPath.row withObject:tmpCreaterDic];
     }
@@ -293,11 +322,11 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
         NSAssert(false, @"未找到该元素");
 #endif
     }
-
+    
 }
 
 -(void)removeCellWithIndexPath:(NSIndexPath*)indexPath{
-    NSMutableArray *tmpCellArr=self.createrDic[@"cell"];
+    NSMutableArray *tmpCellArr=self.createrDic[AutoCellCreaterTableViewItemTypeCell];
     if (tmpCellArr.count>indexPath.section&&((NSMutableArray*)tmpCellArr[indexPath.section]).count>indexPath.row) {
         [(NSMutableArray*)tmpCellArr[indexPath.section] removeObjectAtIndex:indexPath.row];
     }
@@ -310,7 +339,7 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
 }
 
 -(void)removeCellsWithSection:(NSInteger)section{
-    NSMutableArray *tmpCellArr=self.createrDic[@"cell"];
+    NSMutableArray *tmpCellArr=self.createrDic[AutoCellCreaterTableViewItemTypeCell];
     if (tmpCellArr.count>section) {
         [tmpCellArr[section] removeAllObjects];
     }
@@ -390,8 +419,8 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
 #pragma mark - UITableViewDataSource - UITableViewDelegate
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     if (self.createrType==AutoCellCreaterTableViewType_Order) {
-        NSMutableArray *tmpCellArr=self.createrDic[@"cell"];
-
+        NSMutableArray *tmpCellArr=self.createrDic[AutoCellCreaterTableViewItemTypeCell];
+        
         if (tmpCellArr.count>indexPath.section&&((NSMutableArray*)tmpCellArr[indexPath.section]).count>indexPath.row) {
             NSMutableDictionary *tmpCreaterDic=((NSMutableArray*)tmpCellArr[indexPath.section])[indexPath.row];
             NSString *cellIdentifier=NSStringFromClass(tmpCreaterDic[@"cellClass"]);
@@ -411,10 +440,12 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
     }
     
     if (self.createrType==AutoCellCreaterTableViewType_Disorder) {
-        if (self.createrArrary.count<1) {
+        NSArray *createrArray=self.createrDisorderDic[AutoCellCreaterTableViewItemTypeCell];
+        
+        if (createrArray.count<1) {
             return nil;
         }
-        for (NSDictionary *createrDic in self.createrArrary) {
+        for (NSDictionary *createrDic in createrArray) {
             acct_createFilter filterBlock=createrDic[@"filterBlock"];
             acct_customSetCell customSetCellBlock=createrDic[@"customSetCellBlock"];
             
@@ -441,6 +472,31 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
     if (_viewForFooterInSectionBlock) {
         return _viewForFooterInSectionBlock(tableView,section);
     }
+    if (self.createrType==AutoCellCreaterTableViewType_Disorder) {
+        NSArray *createrArray=self.createrDisorderDic[AutoCellCreaterTableViewItemTypeFooter];
+        NSIndexPath *indexPath=[NSIndexPath indexPathForRow:0 inSection:section];
+        
+        if (createrArray.count>0) {
+            for (NSDictionary *createrDic in createrArray) {
+                acct_createFilter filterBlock=createrDic[@"filterBlock"];
+                acct_customSetCell customSetCellBlock=createrDic[@"customSetCellBlock"];
+                
+                if (filterBlock==nil||filterBlock(tableView,indexPath)) {
+                    Class cellClass=createrDic[@"cellClass"];
+                    NSString *cellIdentifier=NSStringFromClass(cellClass);
+                    UITableViewHeaderFooterView * autoCreateCell = [self dequeueReusableHeaderFooterViewWithIdentifier:cellIdentifier];
+                    if (!autoCreateCell) {
+                        autoCreateCell = [((UITableViewHeaderFooterView*)[cellClass alloc]) initWithReuseIdentifier:cellIdentifier];
+                    }
+                    if (customSetCellBlock) {
+                        customSetCellBlock(self,autoCreateCell,indexPath);
+                    }
+                    
+                    return autoCreateCell;
+                }
+            }
+        }
+    }
     NSString *indexPathString=[NSString stringWithFormat:@"footer-%zi",section];
     return [self.createrDic objectForKey:indexPathString];
 }
@@ -448,6 +504,31 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     if (_viewForHeaderInSectionBlock) {
         return _viewForHeaderInSectionBlock(tableView,section);
+    }
+    if (self.createrType==AutoCellCreaterTableViewType_Disorder) {
+        NSArray *createrArray=self.createrDisorderDic[AutoCellCreaterTableViewItemTypeHeader];
+        NSIndexPath *indexPath=[NSIndexPath indexPathForRow:0 inSection:section];
+        
+        if (createrArray.count>0) {
+            for (NSDictionary *createrDic in createrArray) {
+                acct_createFilter filterBlock=createrDic[@"filterBlock"];
+                acct_customSetCell customSetCellBlock=createrDic[@"customSetCellBlock"];
+                
+                if (filterBlock==nil||filterBlock(tableView,indexPath)) {
+                    Class cellClass=createrDic[@"cellClass"];
+                    NSString *cellIdentifier=NSStringFromClass(cellClass);
+                    UITableViewHeaderFooterView * autoCreateCell = [self dequeueReusableHeaderFooterViewWithIdentifier:cellIdentifier];
+                    if (!autoCreateCell) {
+                        autoCreateCell = [((UITableViewHeaderFooterView*)[cellClass alloc]) initWithReuseIdentifier:cellIdentifier];
+                    }
+                    if (customSetCellBlock) {
+                        customSetCellBlock(self,autoCreateCell,indexPath);
+                    }
+                    
+                    return autoCreateCell;
+                }
+            }
+        }
     }
     NSString *indexPathString=[NSString stringWithFormat:@"header-%zi",section];
     return [self.createrDic objectForKey:indexPathString];
@@ -457,7 +538,7 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
     if (_acct_numberOfRowsInSectionBlock) {
         return _acct_numberOfRowsInSectionBlock(tableView,section);
     }
-    NSMutableArray *tmpCellArr=self.createrDic[@"cell"];
+    NSMutableArray *tmpCellArr=self.createrDic[AutoCellCreaterTableViewItemTypeCell];
     if (tmpCellArr.count>section) {
         return ((NSMutableArray*)tmpCellArr[section]).count;
     }
@@ -474,10 +555,12 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if (self.createrType==AutoCellCreaterTableViewType_Disorder) {
-        if (self.createrArrary.count<1) {
+        NSArray *createrArray=self.createrDisorderDic[AutoCellCreaterTableViewItemTypeCell];
+        
+        if (createrArray.count<1) {
             return 0;
         }
-        for (NSDictionary *createrDic in self.createrArrary) {
+        for (NSDictionary *createrDic in createrArray) {
             acct_createFilter filterBlock=createrDic[@"filterBlock"];
             acct_heightForRowAtIndexPath heightForRowAtIndexPathBlock=createrDic[@"heightForRowAtIndexPathBlock"];
             if (filterBlock==nil||filterBlock(tableView,indexPath)) {
@@ -488,7 +571,7 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
         }
     }
     if (self.createrType==AutoCellCreaterTableViewType_Order) {
-        NSMutableArray *tmpCellArr=self.createrDic[@"cell"];
+        NSMutableArray *tmpCellArr=self.createrDic[AutoCellCreaterTableViewItemTypeCell];
         if (tmpCellArr.count>indexPath.section&&((NSMutableArray*)tmpCellArr[indexPath.section]).count>indexPath.row) {
             NSMutableDictionary *tmpCreaterDic=((NSMutableArray*)tmpCellArr[indexPath.section])[indexPath.row];
             Class cellClass=[tmpCreaterDic objectForKey:@"cellClass"];
@@ -505,9 +588,28 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
         footerHeight=_heightForFooterInSectionBlock(tableView,section);
     }
     else{
-        NSString *indexPathString=[NSString stringWithFormat:@"footer-%zi",section];
+        if (self.createrType==AutoCellCreaterTableViewType_Disorder) {
+            NSArray *createrArray=self.createrDisorderDic[AutoCellCreaterTableViewItemTypeFooter];
+            
+            if (createrArray.count<1) {
+                footerHeight= 0;
+            }
+            for (NSDictionary *createrDic in createrArray) {
+                acct_createFilter filterBlock=createrDic[@"filterBlock"];
+                acct_heightForRowAtIndexPath heightForRowAtIndexPathBlock=createrDic[@"heightForRowAtIndexPathBlock"];
+                if (filterBlock==nil||filterBlock(tableView,[NSIndexPath indexPathForRow:0 inSection:section])) {
+                    if (heightForRowAtIndexPathBlock) {
+                        footerHeight= heightForRowAtIndexPathBlock(tableView,[NSIndexPath indexPathForRow:0 inSection:section]);
+                    }
+                }
+            }
+        }
+    }
+    NSString *indexPathString=[NSString stringWithFormat:@"footer-%zi",section];
+    if ([self.createrDic objectForKey:indexPathString]) {
         footerHeight=((UIView*)[self.createrDic objectForKey:indexPathString]).frame.size.height;
     }
+    
     return footerHeight<=0?0.1:footerHeight;
 }
 
@@ -517,7 +619,25 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
         headerHeight=_heightForHeaderInSectionBlock(tableView,section);
     }
     else{
-        NSString *indexPathString=[NSString stringWithFormat:@"header-%zi",section];
+        if (self.createrType==AutoCellCreaterTableViewType_Disorder) {
+            NSArray *createrArray=self.createrDisorderDic[AutoCellCreaterTableViewItemTypeHeader];
+            
+            if (createrArray.count<1) {
+                headerHeight= 0;
+            }
+            for (NSDictionary *createrDic in createrArray) {
+                acct_createFilter filterBlock=createrDic[@"filterBlock"];
+                acct_heightForRowAtIndexPath heightForRowAtIndexPathBlock=createrDic[@"heightForRowAtIndexPathBlock"];
+                if (filterBlock==nil||filterBlock(tableView,[NSIndexPath indexPathForRow:0 inSection:section])) {
+                    if (heightForRowAtIndexPathBlock) {
+                        headerHeight= heightForRowAtIndexPathBlock(tableView,[NSIndexPath indexPathForRow:0 inSection:section]);
+                    }
+                }
+            }
+        }
+    }
+    NSString *indexPathString=[NSString stringWithFormat:@"header-%zi",section];
+    if ([self.createrDic objectForKey:indexPathString]) {
         headerHeight=((UIView*)[self.createrDic objectForKey:indexPathString]).frame.size.height;
     }
     return headerHeight<=0?0.1:headerHeight;
@@ -555,11 +675,21 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
 
 #pragma mark - Getter and Setter
 
--(NSMutableArray *)createrArrary{
-    if (!_createrArrary) {
-        _createrArrary=[[NSMutableArray alloc] init];
+-(NSMutableDictionary *)createrDisorderDic{
+    if (!_createrDisorderDic) {
+        _createrDisorderDic=[[NSMutableDictionary alloc] init];
+        NSMutableArray *cellArr=[[NSMutableArray alloc] init];
+        [_createrDisorderDic setObject:cellArr forKey:AutoCellCreaterTableViewItemTypeCell];
+        
+        NSMutableArray *headerArr=[[NSMutableArray alloc] init];
+        [_createrDisorderDic setObject:headerArr forKey:AutoCellCreaterTableViewItemTypeHeader];
+        
+        
+        NSMutableArray *footerArr=[[NSMutableArray alloc] init];
+        [_createrDisorderDic setObject:footerArr forKey:AutoCellCreaterTableViewItemTypeFooter];
+        
     }
-    return _createrArrary;
+    return _createrDisorderDic;
 }
 
 -(NSMutableDictionary *)createrDic{
@@ -568,7 +698,7 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
         
         NSMutableArray *cellArr=[[NSMutableArray alloc] init];
         [cellArr addObject:[[NSMutableArray alloc] init]];
-        [_createrDic setObject:cellArr forKey:@"cell"];
+        [_createrDic setObject:cellArr forKey:AutoCellCreaterTableViewItemTypeCell];
     }
     return _createrDic;
 }
@@ -579,7 +709,7 @@ typedef enum LastAddACCTableViewSectionType:NSInteger{
     }
     else{
         _createNumberOfSections=createNumberOfSections;
-        NSMutableArray *tmpCellArr=self.createrDic[@"cell"];
+        NSMutableArray *tmpCellArr=self.createrDic[AutoCellCreaterTableViewItemTypeCell];
         if (tmpCellArr.count<=_createNumberOfSections) {
             for (NSInteger i=0; i<=_createNumberOfSections+1-tmpCellArr.count; i++) {
                 [tmpCellArr addObject:[[NSMutableArray alloc] init]];
