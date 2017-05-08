@@ -57,6 +57,7 @@
 		84B7E5691E45E38500EAB159 /* AutoCellCreaterCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoCellCreaterCollectionView.m; sourceTree = "<group>"; };
 		84B7E56B1E45E38500EAB159 /* AutoCellCreaterTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoCellCreaterTableView.h; sourceTree = "<group>"; };
 		84B7E56C1E45E38500EAB159 /* AutoCellCreaterTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoCellCreaterTableView.m; sourceTree = "<group>"; };
+		84DDF08F1EC03E5100B6AB6A /* AutoCellCreater.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AutoCellCreater.h; path = ../../AutoCellCreater.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +108,7 @@
 		84B7E5291E45D48700EAB159 /* AutoCellCreaterDemo */ = {
 			isa = PBXGroup;
 			children = (
+				84DDF08F1EC03E5100B6AB6A /* AutoCellCreater.h */,
 				84B7E5671E45E38500EAB159 /* AutoCellCreaterCollectionView */,
 				84B7E56A1E45E38500EAB159 /* AutoCellCreaterTableView */,
 				84B7E52D1E45D48700EAB159 /* AppDelegate.h */,
