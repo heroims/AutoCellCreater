@@ -58,7 +58,7 @@ typedef void  (^accc_scrollViewDidScroll)(UIScrollView *scrollView);
 @property(nonatomic,copy)accc_scrollViewDidScroll accc_scrollViewDidScrollBlock;
 -(void)setAccc_scrollViewDidScrollBlock:(accc_scrollViewDidScroll)accc_scrollViewDidScrollBlock;
 
-//通用模式调用
+#pragma mark - 通用模式调用
 -(void)addHeaderInSection:(NSInteger)section headerClass:(Class)headerClass bindModel:(id)bindModel;
 -(void)replaceHeaderInSection:(NSInteger)section headerClass:(Class)headerClass bindModel:(id)bindModel;
 -(void)removeHeaderInSection:(NSInteger)section;
@@ -67,7 +67,7 @@ typedef void  (^accc_scrollViewDidScroll)(UIScrollView *scrollView);
 -(void)replaceFooterInSection:(NSInteger)section footerClass:(Class)footerClass bindModel:(id)bindModel;
 -(void)removeFooterInSection:(NSInteger)section;
 
-//begin   仅支持AutoCellCreaterType_Order模式调用
+#pragma mark -    仅支持AutoCellCreaterType_Order模式调用
 -(void)addHeaderWithHeaderClass:(Class)headerClass bindModel:(id)bindModel;
 -(void)addFooterWithFooterClass:(Class)footerClass bindModel:(id)bindModel;
 -(void)addCellWithClass:(Class)cellClass bindModel:(id)bindModel;
@@ -85,9 +85,8 @@ typedef void  (^accc_scrollViewDidScroll)(UIScrollView *scrollView);
 - (AutoCellCreaterCollectionView * (^)(NSIndexPath *indexPath))accc_removeCell;
 
 - (void (^)())accc_reloadData;
-//end
 
-//仅支持AutoCellCreaterType_Disorder模式调用
+#pragma mark - 仅支持AutoCellCreaterType_Disorder模式调用
 -(void)addCellWithClass:(Class)cellClass sizeForItemAtIndexPathBlock:(accc_sizeForItemAtIndexPath)sizeForItemAtIndexPathBlock;
 -(void)addCellWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock sizeForItemAtIndexPathBlock:(accc_sizeForItemAtIndexPath)sizeForItemAtIndexPathBlock;
 -(void)addCellWithClass:(Class)cellClass customSetCellBlock:(accc_customSetCell)customSetCellBlock sizeForItemAtIndexPathBlock:(accc_sizeForItemAtIndexPath)sizeForItemAtIndexPathBlock;

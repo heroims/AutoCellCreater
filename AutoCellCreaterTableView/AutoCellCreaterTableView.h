@@ -64,7 +64,7 @@ typedef void  (^acct_scrollViewDidScroll)(UIScrollView *scrollView);
 @property(nonatomic,copy)acct_scrollViewDidScroll acct_scrollViewDidScrollBlock;
 -(void)setAcct_scrollViewDidScrollBlock:(acct_scrollViewDidScroll)acct_scrollViewDidScrollBlock;
 
-//通用模式调用
+#pragma mark - 通用模式调用
 -(void)addHeaderInSection:(NSInteger)section headerView:(UIView*)headerView;
 -(void)replaceHeaderInSection:(NSInteger)section headerView:(UIView*)headerView;
 -(void)removeHeaderInSection:(NSInteger)section;
@@ -78,7 +78,7 @@ typedef void  (^acct_scrollViewDidScroll)(UIScrollView *scrollView);
 
 -(void)acct_setEditingStyleForRowAtIndexPathBlock:(acct_editingStyleForRowAtIndexPath)editingStyleBlock commitEditingStyleBlock:(acct_commitEditingStyle)commitBlock;
 
-//begin   仅支持AutoCellCreaterType_Order模式调用
+#pragma mark -  仅支持AutoCellCreaterType_Order模式调用
 -(void)addHeaderWithHeaderView:(UIView*)headerView;
 -(void)addFooterWithFooterView:(UIView*)footerView;
 -(void)addCellWithClass:(Class)cellClass bindModel:(id)bindModel;
@@ -98,9 +98,8 @@ typedef void  (^acct_scrollViewDidScroll)(UIScrollView *scrollView);
 - (void (^)(UITableViewRowAnimation animation))acct_reloadDataAnimation;
 - (void (^)())acct_reloadData;
 
-//end
 
-//仅支持AutoCellCreaterType_Disorder模式调用
+#pragma mark - 仅支持AutoCellCreaterType_Disorder模式调用
 -(void)addCellWithClass:(Class)cellClass heightForRowAtIndexPathBlock:(acct_heightForRowAtIndexPath)heightForRowAtIndexPathBlock;
 -(void)addCellWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock heightForRowAtIndexPathBlock:(acct_heightForRowAtIndexPath)heightForRowAtIndexPathBlock;
 -(void)addCellWithClass:(Class)cellClass customSetCellBlock:(acct_customSetCell)customSetCellBlock heightForRowAtIndexPathBlock:(acct_heightForRowAtIndexPath)heightForRowAtIndexPathBlock;
