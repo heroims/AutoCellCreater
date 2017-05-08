@@ -8,7 +8,7 @@ s.license               = { :type => 'MIT', :file => 'README.md' }
 s.author                = { 'heroims' => 'heroims@163.com' }
 s.source                = { :git => 'https://github.com/heroims/AutoCellCreater.git', :tag => "#{s.version}" }
 s.platform              = :ios, '6.0'
-s.source_files          = 'AutoCellCreaterTableView/*.{h,m}','AutoCellCreaterCollectionView/*.{h,m}'
+s.source_files          = 'AutoCellCreater.h'
 s.subspec 'AutoCellCreaterTableView' do |ss|
 ss.source_files = 'AutoCellCreaterTableView/*.{h,m}'
 end
