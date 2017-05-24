@@ -121,6 +121,8 @@ static NSString *const AutoCellCreaterTableViewItemTypeFooter = @"AutoCellCreate
     return self;
 }
 
+#pragma mark - block形式封装
+
 -(void)acct_setViewForHeaderInSectionBlock:(acct_viewForHeaderInSection)viewBlock heightForHeaderInSection:(acct_heightForHeaderInSection)heightBlock{
     self.viewForHeaderInSectionBlock=viewBlock;
     self.heightForHeaderInSectionBlock=heightBlock;
@@ -191,6 +193,9 @@ static NSString *const AutoCellCreaterTableViewItemTypeFooter = @"AutoCellCreate
     
     [self.createrDisorderDic setObject:tmpCreaterArray forKey:cellType];
 }
+
+
+#pragma mark - 插Cell封装
 
 -(void)addHeaderWithHeaderView:(UIView*)headerView{
     if (isNotFirstAddHeader) {
@@ -345,6 +350,8 @@ static NSString *const AutoCellCreaterTableViewItemTypeFooter = @"AutoCellCreate
     }
     [self reloadData];
 }
+
+#pragma mark - 链式语法封装
 
 - (AutoCellCreaterTableView * (^)(Class cellClass,id bindModel,NSIndexPath *indexPath,acct_customSetCell customSetCellBlock))acct_addCell{
     AutoCellCreaterTableView *(^acct_addCellBlock)()=^(Class cellClass,id bindModel,NSIndexPath *indexPath,acct_customSetCell customSetCellBlock){

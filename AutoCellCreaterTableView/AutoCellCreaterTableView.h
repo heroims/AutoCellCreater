@@ -22,6 +22,7 @@ typedef enum AutoCellCreaterTableViewType:NSInteger{
     AutoCellCreaterTableViewType_Disorder//按逻辑创建
 }AutoCellCreaterTableViewType;
 
+#pragma mark - 插cell写法必须实现该协议  定义数据绑定对cell的赋值，可作为通用协议使用
 @protocol AutoCellCreaterTableViewOrderProtocol <NSObject>
 
 @required
@@ -30,11 +31,18 @@ typedef enum AutoCellCreaterTableViewType:NSInteger{
 
 @end
 
-@interface AutoCellCreaterTableView : UITableView
-
+#pragma mark - 相当于cellForRowAtIndexPath的回调，这里做了拆分为了更加明确实现 区分cell和设置cell
+/**
+ 区分cell类型 根据具体情况实现过滤条件返回
+ */
 typedef BOOL  (^acct_createFilter)(UITableView *tableView,NSIndexPath *indexPath);
+
+/**
+ 设置cell自定义扩展处理
+ */
 typedef void  (^acct_customSetCell)(UITableView *tableView,UIView *tableViewCell,NSIndexPath *indexPath);
 
+#pragma mark - 常用回调Block封装 需要其他回调直接继承扩展即可
 typedef void  (^acct_tableViewDidSelectRowAtIndexPath)(UITableView *tableView,NSIndexPath *indexPath);
 
 typedef CGFloat  (^acct_heightForRowAtIndexPath)(UITableView *tableView,NSIndexPath *indexPath);
@@ -49,6 +57,9 @@ typedef UITableViewCellEditingStyle  (^acct_editingStyleForRowAtIndexPath)(UITab
 typedef void  (^acct_commitEditingStyle)(UITableView *tableView,UITableViewCellEditingStyle editingStyle,NSIndexPath *indexPath);
 typedef void  (^acct_scrollViewDidScroll)(UIScrollView *scrollView);
 
+#pragma mark -
+
+@interface AutoCellCreaterTableView : UITableView
 
 @property(nonatomic,assign)AutoCellCreaterTableViewType createrType;
 
@@ -78,7 +89,7 @@ typedef void  (^acct_scrollViewDidScroll)(UIScrollView *scrollView);
 
 -(void)acct_setEditingStyleForRowAtIndexPathBlock:(acct_editingStyleForRowAtIndexPath)editingStyleBlock commitEditingStyleBlock:(acct_commitEditingStyle)commitBlock;
 
-#pragma mark -  仅支持AutoCellCreaterType_Order模式调用
+#pragma mark -  仅支持AutoCellCreaterType_Order模式调用   插Cell形式，根据代码添加顺序插入
 -(void)addHeaderWithHeaderView:(UIView*)headerView;
 -(void)addFooterWithFooterView:(UIView*)footerView;
 -(void)addCellWithClass:(Class)cellClass bindModel:(id)bindModel;
@@ -99,7 +110,7 @@ typedef void  (^acct_scrollViewDidScroll)(UIScrollView *scrollView);
 - (void (^)())acct_reloadData;
 
 
-#pragma mark - 仅支持AutoCellCreaterType_Disorder模式调用
+#pragma mark - 仅支持AutoCellCreaterType_Disorder模式调用   Block形式
 -(void)addCellWithClass:(Class)cellClass heightForRowAtIndexPathBlock:(acct_heightForRowAtIndexPath)heightForRowAtIndexPathBlock;
 -(void)addCellWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock heightForRowAtIndexPathBlock:(acct_heightForRowAtIndexPath)heightForRowAtIndexPathBlock;
 -(void)addCellWithClass:(Class)cellClass customSetCellBlock:(acct_customSetCell)customSetCellBlock heightForRowAtIndexPathBlock:(acct_heightForRowAtIndexPath)heightForRowAtIndexPathBlock;

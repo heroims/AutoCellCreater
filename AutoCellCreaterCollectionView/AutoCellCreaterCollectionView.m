@@ -111,6 +111,8 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
     return self;
 }
 
+#pragma mark - block形式封装
+
 -(void)addHeaderWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock customSetCellBlock:(accc_customSetCell)customSetCellBlock sizeForItemAtIndexPathBlock:(accc_sizeForItemAtIndexPath)sizeForItemAtIndexPathBlock{
     self.createrType=AutoCellCreaterCollectionViewType_Disorder;
     [self registerClass:cellClass forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass(cellClass)];
@@ -193,6 +195,8 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
     [self.createrDisorderDic setObject:tmpCreaterArray forKey:@"cell" ];
 }
 
+
+#pragma mark - 插Cell封装
 -(void)addHeaderWithHeaderClass:(Class)headerClass bindModel:(id)bindModel{
     if (isNotFirstAddHeader) {
         self.createNumberOfSections+=1;
@@ -380,6 +384,8 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
         [tmpCellArr[section] removeAllObjects];
     }
 }
+
+#pragma mark - 链式语法封装
 
 - (AutoCellCreaterCollectionView * (^)(Class cellClass,id bindModel,NSIndexPath *indexPath,accc_customSetCell customSetCellBlock))accc_addCell{
     AutoCellCreaterCollectionView *(^accc_addCellBlock)()=^(Class cellClass,id bindModel,NSIndexPath *indexPath,accc_customSetCell customSetCellBlock){
