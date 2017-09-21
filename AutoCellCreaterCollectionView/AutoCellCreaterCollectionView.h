@@ -95,7 +95,7 @@ typedef void  (^accc_scrollViewDidScroll)(UIScrollView *scrollView);
 - (AutoCellCreaterCollectionView * (^)(Class cellClass,id bindModel,NSIndexPath *indexPath,accc_customSetCell customSetCellBlock))accc_replaceCell;
 - (AutoCellCreaterCollectionView * (^)(NSIndexPath *indexPath))accc_removeCell;
 
-- (void (^)())accc_reloadData;
+- (void (^)(void))accc_reloadData;
 
 #pragma mark - 仅支持AutoCellCreaterType_Disorder模式调用  Block形式
 -(void)addCellWithClass:(Class)cellClass sizeForItemAtIndexPathBlock:(accc_sizeForItemAtIndexPath)sizeForItemAtIndexPathBlock;
