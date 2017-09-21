@@ -414,7 +414,7 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
     return accc_removeCellBlock;
 }
 
-- (void (^)())accc_reloadData{
+- (void (^)(void))accc_reloadData{
     void (^accc_reloadDataBlock)()= ^(){
         if (self.toDoAction) {
             switch (self.toDoAction.actionType) {

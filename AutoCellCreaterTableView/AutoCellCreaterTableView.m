@@ -380,7 +380,7 @@ static NSString *const AutoCellCreaterTableViewItemTypeFooter = @"AutoCellCreate
     return acct_removeCellBlock;
 }
 
-- (void (^)())acct_reloadData{
+- (void (^)(void))acct_reloadData{
     void (^acct_reloadDataBlock)()= ^(){
         self.acct_reloadDataAnimation(UITableViewRowAnimationNone);
     };
