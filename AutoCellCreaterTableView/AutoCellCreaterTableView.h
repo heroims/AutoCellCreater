@@ -107,7 +107,7 @@ typedef void  (^acct_scrollViewDidScroll)(UIScrollView *scrollView);
 - (AutoCellCreaterTableView * (^)(NSIndexPath *indexPath))acct_removeCell;
 
 - (void (^)(UITableViewRowAnimation animation))acct_reloadDataAnimation;
-- (void (^)())acct_reloadData;
+- (void (^)(void))acct_reloadData;
 
 
 #pragma mark - 仅支持AutoCellCreaterType_Disorder模式调用   Block形式

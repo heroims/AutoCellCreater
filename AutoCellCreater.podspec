@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
 s.name                  = 'AutoCellCreater'
-s.version               = '1.2'
+s.version               = '1.3'
 s.summary               = '自动构建cell'
 s.homepage              = 'https://github.com/heroims/AutoCellCreater'
 s.license               = { :type => 'MIT', :file => 'README.md' }
