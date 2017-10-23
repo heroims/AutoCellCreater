@@ -377,7 +377,7 @@ static NSString *const AutoCellCreaterTableViewItemTypeFooter = @"AutoCellCreate
 #pragma mark - 链式语法封装
 
 - (AutoCellCreaterTableView * (^)(Class cellClass,id bindModel,NSIndexPath *indexPath,acct_customSetCell customSetCellBlock))acct_addCell{
-    AutoCellCreaterTableView *(^acct_addCellBlock)()=^(Class cellClass,id bindModel,NSIndexPath *indexPath,acct_customSetCell customSetCellBlock){
+    AutoCellCreaterTableView *(^acct_addCellBlock)(Class cellClass,id bindModel,NSIndexPath *indexPath,acct_customSetCell customSetCellBlock)=^(Class cellClass,id bindModel,NSIndexPath *indexPath,acct_customSetCell customSetCellBlock){
         [self addCellWithClass:cellClass bindModel:bindModel indexPath:indexPath customSetCellBlock:customSetCellBlock];
         self.toDoAction=[[AutoCellCreaterTableViewActionModel alloc] initWithActionType:AutoCellCreaterTableViewActionType_Add indexPath:indexPath];
         return self;
@@ -386,7 +386,7 @@ static NSString *const AutoCellCreaterTableViewItemTypeFooter = @"AutoCellCreate
 }
 
 - (AutoCellCreaterTableView * (^)(Class cellClass,id bindModel,NSIndexPath *indexPath,acct_customSetCell customSetCellBlock))acct_replaceCell{
-    AutoCellCreaterTableView *(^acct_replaceCellBlock)()=^(Class cellClass,id bindModel,NSIndexPath *indexPath,acct_customSetCell customSetCellBlock){
+    AutoCellCreaterTableView *(^acct_replaceCellBlock)(Class cellClass,id bindModel,NSIndexPath *indexPath,acct_customSetCell customSetCellBlock)=^(Class cellClass,id bindModel,NSIndexPath *indexPath,acct_customSetCell customSetCellBlock){
         [self replaceCellWithClass:cellClass bindModel:bindModel indexPath:indexPath customSetCellBlock:customSetCellBlock];
         self.toDoAction=[[AutoCellCreaterTableViewActionModel alloc] initWithActionType:AutoCellCreaterTableViewActionType_Replace indexPath:indexPath];
         return self;
@@ -395,7 +395,7 @@ static NSString *const AutoCellCreaterTableViewItemTypeFooter = @"AutoCellCreate
 }
 
 - (AutoCellCreaterTableView * (^)(NSIndexPath *indexPath))acct_removeCell{
-    AutoCellCreaterTableView *(^acct_removeCellBlock)()=^(NSIndexPath *indexPath){
+    AutoCellCreaterTableView *(^acct_removeCellBlock)(NSIndexPath *indexPath)=^(NSIndexPath *indexPath){
         [self removeCellWithIndexPath:indexPath];
         self.toDoAction=[[AutoCellCreaterTableViewActionModel alloc] initWithActionType:AutoCellCreaterTableViewActionType_Remove indexPath:indexPath];
         return self;
@@ -404,14 +404,14 @@ static NSString *const AutoCellCreaterTableViewItemTypeFooter = @"AutoCellCreate
 }
 
 - (void (^)(void))acct_reloadData{
-    void (^acct_reloadDataBlock)()= ^(){
+    void (^acct_reloadDataBlock)(void)= ^(void){
         self.acct_reloadDataAnimation(UITableViewRowAnimationNone);
     };
     return acct_reloadDataBlock;
 }
 
 - (void (^)(UITableViewRowAnimation animation))acct_reloadDataAnimation{
-    void (^acct_reloadDataAnimationBlock)()=^(UITableViewRowAnimation animation){
+    void (^acct_reloadDataAnimationBlock)(UITableViewRowAnimation animation)=^(UITableViewRowAnimation animation){
         if (self.toDoAction) {
             switch (self.toDoAction.actionType) {
                 case AutoCellCreaterTableViewActionType_Add:{

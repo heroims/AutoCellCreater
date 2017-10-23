@@ -410,7 +410,7 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
 #pragma mark - 链式语法封装
 
 - (AutoCellCreaterCollectionView * (^)(Class cellClass,id bindModel,NSIndexPath *indexPath,accc_customSetCell customSetCellBlock))accc_addCell{
-    AutoCellCreaterCollectionView *(^accc_addCellBlock)()=^(Class cellClass,id bindModel,NSIndexPath *indexPath,accc_customSetCell customSetCellBlock){
+    AutoCellCreaterCollectionView *(^accc_addCellBlock)(Class cellClass,id bindModel,NSIndexPath *indexPath,accc_customSetCell customSetCellBlock)=^(Class cellClass,id bindModel,NSIndexPath *indexPath,accc_customSetCell customSetCellBlock){
         [self addCellWithClass:cellClass bindModel:bindModel indexPath:indexPath customSetCellBlock:customSetCellBlock];
         self.toDoAction=[[AutoCellCreaterCollectionViewActionModel alloc] initWithActionType:AutoCellCreaterCollectionViewActionType_Add indexPath:indexPath];
         return self;
@@ -419,7 +419,7 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
 }
 
 - (AutoCellCreaterCollectionView * (^)(Class cellClass,id bindModel,NSIndexPath *indexPath,accc_customSetCell customSetCellBlock))accc_replaceCell{
-    AutoCellCreaterCollectionView *(^accc_replaceCellBlock)()=^(Class cellClass,id bindModel,NSIndexPath *indexPath,accc_customSetCell customSetCellBlock){
+    AutoCellCreaterCollectionView *(^accc_replaceCellBlock)(Class cellClass,id bindModel,NSIndexPath *indexPath,accc_customSetCell customSetCellBlock)=^(Class cellClass,id bindModel,NSIndexPath *indexPath,accc_customSetCell customSetCellBlock){
         [self replaceCellWithClass:cellClass bindModel:bindModel indexPath:indexPath customSetCellBlock:customSetCellBlock];
         self.toDoAction=[[AutoCellCreaterCollectionViewActionModel alloc] initWithActionType:AutoCellCreaterCollectionViewActionType_Replace indexPath:indexPath];
         return self;
@@ -428,7 +428,7 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
 }
 
 - (AutoCellCreaterCollectionView * (^)(NSIndexPath *indexPath))accc_removeCell{
-    AutoCellCreaterCollectionView *(^accc_removeCellBlock)()=^(NSIndexPath *indexPath){
+    AutoCellCreaterCollectionView *(^accc_removeCellBlock)(NSIndexPath *indexPath)=^(NSIndexPath *indexPath){
         [self removeCellWithIndexPath:indexPath];
         self.toDoAction=[[AutoCellCreaterCollectionViewActionModel alloc] initWithActionType:AutoCellCreaterCollectionViewActionType_Remove indexPath:indexPath];
         return self;
@@ -437,7 +437,7 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
 }
 
 - (void (^)(void))accc_reloadData{
-    void (^accc_reloadDataBlock)()= ^(){
+    void (^accc_reloadDataBlock)(void)= ^(void){
         if (self.toDoAction) {
             switch (self.toDoAction.actionType) {
                 case AutoCellCreaterCollectionViewActionType_Add:{
