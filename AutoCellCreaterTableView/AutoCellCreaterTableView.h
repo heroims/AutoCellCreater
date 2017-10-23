@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AutoCellCreaterTableViewProtocol.h"
 
 @interface UITableViewCell (AutoCellCreaterTableView)
 
@@ -21,15 +22,6 @@ typedef enum AutoCellCreaterTableViewType:NSInteger{
     AutoCellCreaterTableViewType_Order,//按手动顺序依次创建header cell footer
     AutoCellCreaterTableViewType_Disorder//按逻辑创建
 }AutoCellCreaterTableViewType;
-
-#pragma mark - 插cell写法必须实现该协议  定义数据绑定对cell的赋值，可作为通用协议使用
-@protocol AutoCellCreaterTableViewOrderProtocol <NSObject>
-
-@required
--(void)acct_setBindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath;
-+(CGFloat)acct_getCellHeightWithModel:(id)model indexPath:(NSIndexPath*)indexPath;
-
-@end
 
 #pragma mark - 相当于cellForRowAtIndexPath的回调，这里做了拆分为了更加明确实现 区分cell和设置cell
 /**

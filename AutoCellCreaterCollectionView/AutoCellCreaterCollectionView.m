@@ -18,6 +18,30 @@ static const void *accc_indexPathKey = &accc_indexPathKey;
 @dynamic accc_bindModel;
 @dynamic accc_indexPath;
 
++(void)load{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        @try {
+            Class class = [self class];
+            
+            SEL originalSelector=@selector(accc_setBindModel:indexPath:);
+            SEL swizzledSelector=@selector(_accc_setBindModel:indexPath:);
+            
+            Method originalMethod = class_getInstanceMethod(class, originalSelector);
+            Method swizzledMethod = class_getInstanceMethod(class, swizzledSelector);
+            
+            BOOL success = class_addMethod(class, originalSelector, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod));
+            if (success) {
+                class_replaceMethod(class, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));
+            } else {
+                method_exchangeImplementations(originalMethod, swizzledMethod);
+            }
+        }
+        @catch (NSException *exception) {
+        }
+    });
+}
+
 -(void)setAccc_bindModel:(id)accc_bindModel{
     objc_setAssociatedObject(self, accc_bindModelKey, accc_bindModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
@@ -37,9 +61,7 @@ static const void *accc_indexPathKey = &accc_indexPathKey;
 -(void)_accc_setBindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath{
     self.accc_bindModel=bindModel;
     self.accc_indexPath=indexPath;
-    if ([self conformsToProtocol:objc_getProtocol("AutoCellCreaterCollectionViewOrderProtocol")]) {
-        [(UICollectionViewCell<AutoCellCreaterCollectionViewOrderProtocol>*)self accc_setBindModel:bindModel indexPath:indexPath];
-    }
+    [self _accc_setBindModel:bindModel indexPath:indexPath];
 }
 
 -(CGSize)accc_getCellSize{
@@ -452,9 +474,9 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
             NSMutableDictionary *tmpCreaterDic=((NSMutableArray*)tmpCellArr[indexPath.section])[indexPath.item];
             NSString *cellIdentifier=NSStringFromClass(tmpCreaterDic[@"cellClass"]);
             
-            UICollectionViewCell *autoCreateCell=[self dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
-            [autoCreateCell _accc_setBindModel:tmpCreaterDic[@"bindModel"] indexPath:indexPath];
-            
+            UICollectionViewCell<AutoCellCreaterCollectionViewOrderProtocol> *autoCreateCell=[self dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
+            [autoCreateCell accc_setBindModel:tmpCreaterDic[@"bindModel"] indexPath:indexPath];
+
             accc_customSetCell customSetCellBlock=tmpCreaterDic[@"customSetCellBlock"];
             
             if (customSetCellBlock) {
@@ -492,7 +514,7 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
 
 - (UICollectionReusableView *) collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {
-    UICollectionReusableView *reusableview = nil;
+    UICollectionReusableView<AutoCellCreaterCollectionViewOrderProtocol> *reusableview = nil;
     
     if (kind == UICollectionElementKindSectionHeader) {
         if (self.createrType==AutoCellCreaterCollectionViewType_Disorder) {
@@ -523,8 +545,8 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
         NSString *headerIdentifier=NSStringFromClass(tmpCreaterDic[@"headerClass"]);
         
         reusableview=[self dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:headerIdentifier forIndexPath:indexPath];
-        [reusableview _accc_setBindModel:tmpCreaterDic[@"bindModel"] indexPath:indexPath];
-        
+        [reusableview accc_setBindModel:tmpCreaterDic[@"bindModel"] indexPath:indexPath];
+
         return reusableview;
         
     }
@@ -557,8 +579,8 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
         NSString *footIdentifier=NSStringFromClass(tmpCreaterDic[@"footerClass"]);
         
         reusableview=[self dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:footIdentifier forIndexPath:indexPath];
-        [reusableview _accc_setBindModel:tmpCreaterDic[@"bindModel"] indexPath:indexPath];
-        
+        [reusableview accc_setBindModel:tmpCreaterDic[@"bindModel"] indexPath:indexPath];
+
         return reusableview;
     }
     

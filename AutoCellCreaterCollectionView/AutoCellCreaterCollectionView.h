@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AutoCellCreaterCollectionViewProtocol.h"
 
 @interface UICollectionReusableView (AutoCellCreaterCollectionView)
 
@@ -21,15 +22,6 @@ typedef enum AutoCellCreaterCollectionViewType:NSInteger{
     AutoCellCreaterCollectionViewType_Order,//按手动顺序依次创建header cell footer
     AutoCellCreaterCollectionViewType_Disorder//按逻辑创建
 }AutoCellCreaterCollectionViewType;
-
-#pragma mark - 插cell写法必须实现该协议  定义数据绑定对cell的赋值，可作为通用协议使用
-@protocol AutoCellCreaterCollectionViewOrderProtocol <NSObject>
-
-@required
--(void)accc_setBindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath;
-+(CGSize)accc_getCellSizeWithModel:(id)model indexPath:(NSIndexPath*)indexPath;
-
-@end
 
 #pragma mark - 相当于cellForItemAtIndexPath的回调，这里做了拆分为了更加明确实现 区分cell和设置cell
 /**
@@ -51,6 +43,7 @@ typedef NSInteger  (^accc_numberOfSectionsInCollectionView)(UICollectionView *co
 typedef NSInteger  (^accc_numberOfRowsInSection)(UICollectionView *collectionView,NSInteger section);
 
 typedef void  (^accc_scrollViewDidScroll)(UIScrollView *scrollView);
+
 #pragma mark -
 
 @interface AutoCellCreaterCollectionView : UICollectionView
