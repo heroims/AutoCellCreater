@@ -17,30 +17,6 @@ static const void *acct_indexPathKey = &acct_indexPathKey;
 @dynamic acct_bindModel;
 @dynamic acct_indexPath;
 
-+(void)load{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        @try {
-            Class class = [self class];
-            
-            SEL originalSelector=@selector(acct_setBindModel:indexPath:);
-            SEL swizzledSelector=@selector(_acct_setBindModel:indexPath:);
-            
-            Method originalMethod = class_getInstanceMethod(class, originalSelector);
-            Method swizzledMethod = class_getInstanceMethod(class, swizzledSelector);
-            
-            BOOL success = class_addMethod(class, originalSelector, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod));
-            if (success) {
-                class_replaceMethod(class, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));
-            } else {
-                method_exchangeImplementations(originalMethod, swizzledMethod);
-            }
-        }
-        @catch (NSException *exception) {
-        }
-    });
-}
-
 -(void)setAcct_bindModel:(id)acct_bindModel{
     objc_setAssociatedObject(self, acct_bindModelKey, acct_bindModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
@@ -60,8 +36,9 @@ static const void *acct_indexPathKey = &acct_indexPathKey;
 -(void)_acct_setBindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath{
     self.acct_bindModel=bindModel;
     self.acct_indexPath=indexPath;
-
-    [self _acct_setBindModel:bindModel indexPath:indexPath];
+    if ([self conformsToProtocol:objc_getProtocol("AutoCellCreaterTableViewOrderProtocol")]) {
+        [(UITableView<AutoCellCreaterTableViewOrderProtocol>*)self acct_setBindModel:bindModel indexPath:indexPath];
+    }
 }
 
 -(CGFloat)acct_getCellHeight{
@@ -455,11 +432,11 @@ static NSString *const AutoCellCreaterTableViewItemTypeFooter = @"AutoCellCreate
             NSMutableDictionary *tmpCreaterDic=((NSMutableArray*)tmpCellArr[indexPath.section])[indexPath.row];
             NSString *cellIdentifier=NSStringFromClass(tmpCreaterDic[@"cellClass"]);
             
-            UITableViewCell<AutoCellCreaterTableViewOrderProtocol> * autoCreateCell = [self dequeueReusableCellWithIdentifier:cellIdentifier];
+            UITableViewCell * autoCreateCell = [self dequeueReusableCellWithIdentifier:cellIdentifier];
             if (!autoCreateCell) {
-                autoCreateCell = [((UITableViewCell<AutoCellCreaterTableViewOrderProtocol>*)[tmpCreaterDic[@"cellClass"] alloc]) initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+                autoCreateCell = [((UITableViewCell*)[tmpCreaterDic[@"cellClass"] alloc]) initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
             }
-            [autoCreateCell acct_setBindModel:tmpCreaterDic[@"bindModel"] indexPath:indexPath];
+            [autoCreateCell _acct_setBindModel:tmpCreaterDic[@"bindModel"] indexPath:indexPath];
             acct_customSetCell customSetCellBlock=tmpCreaterDic[@"customSetCellBlock"];
             if (customSetCellBlock) {
                 customSetCellBlock(self,autoCreateCell,indexPath);
