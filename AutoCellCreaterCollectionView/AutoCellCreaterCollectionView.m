@@ -112,8 +112,33 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
 }
 
 #pragma mark - block形式封装
+-(void)addHeaderWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock getCellBindModelBlock:(accc_getCellBindModel)getCellModelBlock{
+#ifdef RELEASE
+#else
+    NSAssert([cellClass conformsToProtocol:objc_getProtocol("AutoCellCreaterCollectionViewOrderProtocol")], @"未实现AutoCellCreaterCollectionViewOrderProtocol禁止使用");
+#endif
+
+    [self addHeaderWithClass:cellClass createFilterBlock:filterBlock customSetCellBlock:^(UICollectionView *collectionView, UICollectionReusableView *collectionViewCell, NSIndexPath *indexPath) {
+        id bindModel=getCellModelBlock(collectionView,indexPath);
+        
+        collectionViewCell.accc_bindModel=bindModel;
+        collectionViewCell.accc_indexPath=indexPath;
+        
+        [(UICollectionReusableView<AutoCellCreaterCollectionViewOrderProtocol>*)collectionViewCell accc_setBindModel:bindModel indexPath:indexPath];
+
+    } sizeForItemAtIndexPathBlock:^CGSize(UICollectionView *collectionView, UICollectionViewLayout *collectionViewLayout, NSIndexPath *indexPath) {
+        id bindModel=getCellModelBlock(collectionView,indexPath);
+        
+        return [cellClass accc_getCellSizeWithModel:bindModel indexPath:indexPath];
+    }];
+}
 
 -(void)addHeaderWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock customSetCellBlock:(accc_customSetCell)customSetCellBlock sizeForItemAtIndexPathBlock:(accc_sizeForItemAtIndexPath)sizeForItemAtIndexPathBlock{
+#ifdef RELEASE
+#else
+    NSAssert([cellClass isKindOfClass:object_getClass([UICollectionReusableView class])], @"cell不是继承UICollectionReusableView的类");
+#endif
+
     self.createrType=AutoCellCreaterCollectionViewType_Disorder;
     [self registerClass:cellClass forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass(cellClass)];
     NSMutableDictionary *tmpCreaterDic=[[NSMutableDictionary alloc] init];
@@ -137,7 +162,34 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
     
     
 }
+
+-(void)addFooterWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock getCellBindModelBlock:(accc_getCellBindModel)getCellModelBlock{
+#ifdef RELEASE
+#else
+    NSAssert([cellClass conformsToProtocol:objc_getProtocol("AutoCellCreaterCollectionViewOrderProtocol")], @"未实现AutoCellCreaterCollectionViewOrderProtocol禁止使用");
+#endif
+
+    [self addFooterWithClass:cellClass createFilterBlock:filterBlock customSetCellBlock:^(UICollectionView *collectionView, UICollectionReusableView *collectionViewCell, NSIndexPath *indexPath) {
+        id bindModel=getCellModelBlock(collectionView,indexPath);
+        
+        collectionViewCell.accc_bindModel=bindModel;
+        collectionViewCell.accc_indexPath=indexPath;
+        
+        [(UICollectionReusableView<AutoCellCreaterCollectionViewOrderProtocol>*)collectionViewCell accc_setBindModel:bindModel indexPath:indexPath];
+
+    } sizeForItemAtIndexPathBlock:^CGSize(UICollectionView *collectionView, UICollectionViewLayout *collectionViewLayout, NSIndexPath *indexPath) {
+        id bindModel=getCellModelBlock(collectionView,indexPath);
+        
+        return [cellClass accc_getCellSizeWithModel:bindModel indexPath:indexPath];
+    }];
+}
+
 -(void)addFooterWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock customSetCellBlock:(accc_customSetCell)customSetCellBlock sizeForItemAtIndexPathBlock:(accc_sizeForItemAtIndexPath)sizeForItemAtIndexPathBlock{
+#ifdef RELEASE
+#else
+    NSAssert([cellClass isKindOfClass:object_getClass([UICollectionReusableView class])], @"cell不是继承UICollectionReusableView的类");
+#endif
+
     self.createrType=AutoCellCreaterCollectionViewType_Disorder;
     [self registerClass:cellClass forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:NSStringFromClass(cellClass)];
     NSMutableDictionary *tmpCreaterDic=[[NSMutableDictionary alloc] init];
@@ -173,7 +225,37 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
     [self addCellWithClass:cellClass createFilterBlock:nil customSetCellBlock:customSetCellBlock sizeForItemAtIndexPathBlock:sizeForItemAtIndexPathBlock];
 }
 
+-(void)addCellWithClass:(Class)cellClass getCellBindModelBlock:(accc_getCellBindModel)getCellModelBlock{
+    [self addCellWithClass:cellClass createFilterBlock:nil getCellBindModelBlock:getCellModelBlock];
+}
+
+-(void)addCellWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock getCellBindModelBlock:(accc_getCellBindModel)getCellModelBlock{
+#ifdef RELEASE
+#else
+    NSAssert([cellClass conformsToProtocol:objc_getProtocol("AutoCellCreaterCollectionViewOrderProtocol")], @"未实现AutoCellCreaterCollectionViewOrderProtocol禁止使用");
+#endif
+
+    [self addCellWithClass:cellClass createFilterBlock:filterBlock customSetCellBlock:^(UICollectionView *collectionView, UICollectionReusableView *collectionViewCell, NSIndexPath *indexPath) {
+        id bindModel=getCellModelBlock(collectionView,indexPath);
+        
+        collectionViewCell.accc_bindModel=bindModel;
+        collectionViewCell.accc_indexPath=indexPath;
+        
+        [(UICollectionReusableView<AutoCellCreaterCollectionViewOrderProtocol>*)collectionViewCell accc_setBindModel:bindModel indexPath:indexPath];
+    } sizeForItemAtIndexPathBlock:^CGSize(UICollectionView *collectionView, UICollectionViewLayout *collectionViewLayout, NSIndexPath *indexPath) {
+        id bindModel=getCellModelBlock(collectionView,indexPath);
+        
+        return [cellClass accc_getCellSizeWithModel:bindModel indexPath:indexPath];
+    }];
+}
+
+
 -(void)addCellWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock customSetCellBlock:(accc_customSetCell)customSetCellBlock sizeForItemAtIndexPathBlock:(accc_sizeForItemAtIndexPath)sizeForItemAtIndexPathBlock{
+#ifdef RELEASE
+#else
+    NSAssert([cellClass isKindOfClass:object_getClass([UICollectionViewCell class])], @"cell不是继承UICollectionViewCell的类");
+#endif
+
     self.createrType=AutoCellCreaterCollectionViewType_Disorder;
     [self registerClass:cellClass forCellWithReuseIdentifier:NSStringFromClass(cellClass)];
     NSMutableDictionary *tmpCreaterDic=[[NSMutableDictionary alloc] init];
@@ -205,6 +287,11 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
     [self addHeaderInSection:self.createNumberOfSections headerClass:headerClass bindModel:bindModel];
 }
 -(void)addHeaderInSection:(NSInteger)section headerClass:(Class)headerClass bindModel:(id)bindModel{
+#ifdef RELEASE
+#else
+    NSAssert([headerClass isKindOfClass:object_getClass([UICollectionReusableView class])], @"cell不是继承UICollectionReusableView的类");
+#endif
+
     self.createNumberOfSections=section;
     
     lastAddSectionType=LastAddACCCollectionViewSectionType_Header;
@@ -223,6 +310,11 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
 }
 
 -(void)replaceHeaderInSection:(NSInteger)section headerClass:(Class)headerClass bindModel:(id)bindModel{
+#ifdef RELEASE
+#else
+    NSAssert([headerClass isKindOfClass:object_getClass([UICollectionReusableView class])], @"cell不是继承UICollectionReusableView的类");
+#endif
+
     self.createNumberOfSections=section;
     
     NSString *indexPathString=[NSString stringWithFormat:@"header-%zi",section];
@@ -251,6 +343,11 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
     [self addFooterInSection:self.createNumberOfSections footerClass:footerClass bindModel:bindModel];
 }
 -(void)addFooterInSection:(NSInteger)section footerClass:(Class)footerClass bindModel:(id)bindModel{
+#ifdef RELEASE
+#else
+    NSAssert([footerClass isKindOfClass:object_getClass([UICollectionReusableView class])], @"cell不是继承UICollectionReusableView的类");
+#endif
+
     self.createNumberOfSections=section;
     
     lastAddSectionType=LastAddACCCollectionViewSectionType_Footer;
@@ -269,6 +366,11 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
 }
 
 -(void)replaceFooterInSection:(NSInteger)section footerClass:(Class)footerClass bindModel:(id)bindModel{
+#ifdef RELEASE
+#else
+    NSAssert([footerClass isKindOfClass:object_getClass([UICollectionReusableView class])], @"cell不是继承UICollectionReusableView的类");
+#endif
+
     self.createNumberOfSections=section;
     
     NSString *indexPathString=[NSString stringWithFormat:@"footer-%zi",section];
@@ -304,6 +406,11 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
 }
 
 -(void)addCellWithClass:(Class)cellClass bindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath customSetCellBlock:(accc_customSetCell)customSetCellBlock{
+#ifdef RELEASE
+#else
+    NSAssert([cellClass isKindOfClass:object_getClass([UICollectionViewCell class])], @"cell不是继承UICollectionViewCell的类");
+#endif
+
     NSMutableArray *tmpCellArr=self.createrDic[@"cell"];
     
     NSString *cellIdentifier=NSStringFromClass(cellClass);

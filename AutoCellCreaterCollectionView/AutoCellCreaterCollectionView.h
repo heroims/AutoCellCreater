@@ -34,6 +34,11 @@ typedef BOOL  (^accc_createFilter)(UICollectionView *collectionView,NSIndexPath 
  */
 typedef void  (^accc_customSetCell)(UICollectionView *collectionView,UICollectionReusableView *collectionViewCell,NSIndexPath *indexPath);
 
+/**
+ 获取cell绑定Model 非持有型block
+ */
+typedef id  (^accc_getCellBindModel)(UICollectionView *collectionView,NSIndexPath *indexPath);
+
 #pragma mark - 常用回调Block封装 需要其他回调直接继承扩展即可
 typedef void  (^accc_collectionViewDidSelectRowAtIndexPath)(UICollectionView *collectionView,NSIndexPath *indexPath);
 
@@ -98,5 +103,11 @@ typedef void  (^accc_scrollViewDidScroll)(UIScrollView *scrollView);
 
 -(void)addHeaderWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock customSetCellBlock:(accc_customSetCell)customSetCellBlock sizeForItemAtIndexPathBlock:(accc_sizeForItemAtIndexPath)sizeForItemAtIndexPathBlock;
 -(void)addFooterWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock customSetCellBlock:(accc_customSetCell)customSetCellBlock sizeForItemAtIndexPathBlock:(accc_sizeForItemAtIndexPath)sizeForItemAtIndexPathBlock;
+
+//根据AutoCellCreaterCollectionViewOrderProtocol自动实现高度及数据绑定创建cell，自动完成customSetCellBlock和sizeForItemAtIndexPathBlock
+-(void)addCellWithClass:(Class)cellClass getCellBindModelBlock:(accc_getCellBindModel)getCellModelBlock;
+-(void)addCellWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock getCellBindModelBlock:(accc_getCellBindModel)getCellModelBlock;
+-(void)addHeaderWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock getCellBindModelBlock:(accc_getCellBindModel)getCellModelBlock;
+-(void)addFooterWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock getCellBindModelBlock:(accc_getCellBindModel)getCellModelBlock;
 
 @end

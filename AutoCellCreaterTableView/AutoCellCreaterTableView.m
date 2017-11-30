@@ -12,6 +12,44 @@
 static const void *acct_bindModelKey = &acct_bindModelKey;
 static const void *acct_indexPathKey = &acct_indexPathKey;
 
+@implementation UITableViewHeaderFooterView (AutoCellCreaterTableView)
+
+@dynamic acct_bindModel;
+@dynamic acct_indexPath;
+
+-(void)setAcct_bindModel:(id)acct_bindModel{
+    objc_setAssociatedObject(self, acct_bindModelKey, acct_bindModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+-(id)acct_bindModel{
+    return objc_getAssociatedObject(self, acct_bindModelKey);
+}
+
+-(void)setAcct_indexPath:(NSIndexPath *)acct_indexPath{
+    objc_setAssociatedObject(self, acct_indexPathKey, acct_indexPath, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+-(NSIndexPath *)acct_indexPath{
+    return objc_getAssociatedObject(self, acct_indexPathKey);
+}
+
+-(void)_acct_setBindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath{
+    self.acct_bindModel=bindModel;
+    self.acct_indexPath=indexPath;
+    if ([self conformsToProtocol:objc_getProtocol("AutoCellCreaterTableViewOrderProtocol")]) {
+        [(UITableView<AutoCellCreaterTableViewOrderProtocol>*)self acct_setBindModel:bindModel indexPath:indexPath];
+    }
+}
+
+-(CGFloat)acct_getCellHeight{
+    if ([self conformsToProtocol:objc_getProtocol("AutoCellCreaterTableViewOrderProtocol")]) {
+        return [[self class] acct_getCellHeightWithModel:self.acct_bindModel indexPath:self.acct_indexPath];
+    }
+    return 45;
+}
+
+@end
+
 @implementation UITableViewCell (AutoCellCreaterTableView)
 
 @dynamic acct_bindModel;
@@ -127,6 +165,7 @@ static NSString *const AutoCellCreaterTableViewItemTypeFooter = @"AutoCellCreate
     self.viewForHeaderInSectionBlock=viewBlock;
     self.heightForHeaderInSectionBlock=heightBlock;
 }
+
 -(void)acct_setViewForFooterInSectionBlock:(acct_viewForFooterInSection)viewBlock heightForFooterInSection:(acct_heightForFooterInSection)heightBlock{
     self.viewForFooterInSectionBlock=viewBlock;
     self.heightForFooterInSectionBlock=heightBlock;
@@ -142,8 +181,54 @@ static NSString *const AutoCellCreaterTableViewItemTypeFooter = @"AutoCellCreate
     [self addCellWithClass:cellClass createFilterBlock:filterBlock customSetCellBlock:customSetCellBlock heightForRowAtIndexPathBlock:heightForRowAtIndexPathBlock cellType:AutoCellCreaterTableViewItemTypeHeader];
 }
 
+-(void)addHeaderWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock getCellBindModelBlock:(acct_getCellBindModel)getCellBindModelBlock{
+#ifdef RELEASE
+#else
+    NSAssert([cellClass conformsToProtocol:objc_getProtocol("AutoCellCreaterTableViewOrderProtocol")], @"未实现AutoCellCreaterTableViewOrderProtocol禁止使用");
+#endif
+
+    [self addCellWithClass:cellClass createFilterBlock:filterBlock customSetCellBlock:^(UITableView *tableView, UIView *tableViewCell, NSIndexPath *indexPath) {
+        UITableViewHeaderFooterView<AutoCellCreaterTableViewOrderProtocol> *cell=(UITableViewHeaderFooterView<AutoCellCreaterTableViewOrderProtocol>*)tableViewCell;
+        
+        id bindModel=getCellBindModelBlock(tableView,indexPath);
+        
+        cell.acct_bindModel=bindModel;
+        cell.acct_indexPath=indexPath;
+        
+        [cell acct_setBindModel:bindModel indexPath:indexPath];
+        
+    } heightForRowAtIndexPathBlock:^CGFloat(UITableView *tableView, NSIndexPath *indexPath) {
+        id bindModel=getCellBindModelBlock(tableView,indexPath);
+        
+        return [cellClass acct_getCellHeightWithModel:bindModel indexPath:indexPath];
+    } cellType:AutoCellCreaterTableViewItemTypeHeader];
+}
+
 -(void)addFooterWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock customSetCellBlock:(acct_customSetCell)customSetCellBlock heightForRowAtIndexPathBlock:(acct_heightForRowAtIndexPath)heightForRowAtIndexPathBlock{
     [self addCellWithClass:cellClass createFilterBlock:filterBlock customSetCellBlock:customSetCellBlock heightForRowAtIndexPathBlock:heightForRowAtIndexPathBlock cellType:AutoCellCreaterTableViewItemTypeFooter];
+}
+
+-(void)addFooterWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock getCellBindModelBlock:(acct_getCellBindModel)getCellBindModelBlock{
+#ifdef RELEASE
+#else
+    NSAssert([cellClass conformsToProtocol:objc_getProtocol("AutoCellCreaterTableViewOrderProtocol")], @"未实现AutoCellCreaterTableViewOrderProtocol禁止使用");
+#endif
+
+    [self addCellWithClass:cellClass createFilterBlock:filterBlock customSetCellBlock:^(UITableView *tableView, UIView *tableViewCell, NSIndexPath *indexPath) {
+        UITableViewHeaderFooterView<AutoCellCreaterTableViewOrderProtocol> *cell=(UITableViewHeaderFooterView<AutoCellCreaterTableViewOrderProtocol>*)tableViewCell;
+        
+        id bindModel=getCellBindModelBlock(tableView,indexPath);
+        
+        cell.acct_bindModel=bindModel;
+        cell.acct_indexPath=indexPath;
+        
+        [cell acct_setBindModel:bindModel indexPath:indexPath];
+        
+    } heightForRowAtIndexPathBlock:^CGFloat(UITableView *tableView, NSIndexPath *indexPath) {
+        id bindModel=getCellBindModelBlock(tableView,indexPath);
+        
+        return [cellClass acct_getCellHeightWithModel:bindModel indexPath:indexPath];
+    } cellType:AutoCellCreaterTableViewItemTypeFooter];
 }
 
 -(void)addCellWithClass:(Class)cellClass heightForRowAtIndexPathBlock:(acct_heightForRowAtIndexPath)heightForRowAtIndexPathBlock{
@@ -162,15 +247,60 @@ static NSString *const AutoCellCreaterTableViewItemTypeFooter = @"AutoCellCreate
 -(void)addCellWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock customSetCellBlock:(acct_customSetCell)customSetCellBlock heightForRowAtIndexPathBlock:(acct_heightForRowAtIndexPath)heightForRowAtIndexPathBlock {
     [self addCellWithClass:cellClass createFilterBlock:filterBlock customSetCellBlock:customSetCellBlock heightForRowAtIndexPathBlock:heightForRowAtIndexPathBlock cellType:AutoCellCreaterTableViewItemTypeCell];
 }
+
+-(void)addCellWithClass:(Class)cellClass getCellBindModelBlock:(acct_getCellBindModel)getCellBindModelBlock{
+    [self addCellWithClass:cellClass createFilterBlock:nil getCellBindModelBlock:getCellBindModelBlock];
+}
+
+-(void)addCellWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock getCellBindModelBlock:(acct_getCellBindModel)getCellBindModelBlock{
+#ifdef RELEASE
+#else
+    NSAssert([cellClass conformsToProtocol:objc_getProtocol("AutoCellCreaterTableViewOrderProtocol")], @"未实现AutoCellCreaterTableViewOrderProtocol禁止使用");
+#endif
+
+    [self addCellWithClass:cellClass createFilterBlock:filterBlock customSetCellBlock:^(UITableView *tableView, UIView *tableViewCell, NSIndexPath *indexPath) {
+        UITableViewCell<AutoCellCreaterTableViewOrderProtocol> *cell=(UITableViewCell<AutoCellCreaterTableViewOrderProtocol>*)tableViewCell;
+        
+        id bindModel=getCellBindModelBlock(tableView,indexPath);
+        
+        cell.acct_bindModel=bindModel;
+        cell.acct_indexPath=indexPath;
+        
+        [cell acct_setBindModel:bindModel indexPath:indexPath];
+        
+    } heightForRowAtIndexPathBlock:^CGFloat(UITableView *tableView, NSIndexPath *indexPath) {
+        id bindModel=getCellBindModelBlock(tableView,indexPath);
+
+        return [cellClass acct_getCellHeightWithModel:bindModel indexPath:indexPath];
+    } cellType:AutoCellCreaterTableViewItemTypeCell];
+
+}
+
 -(void)addCellWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock customSetCellBlock:(acct_customSetCell)customSetCellBlock heightForRowAtIndexPathBlock:(acct_heightForRowAtIndexPath)heightForRowAtIndexPathBlock cellType:(NSString*)cellType{
+
     self.createrType=AutoCellCreaterTableViewType_Disorder;
     if ([cellType isEqualToString:AutoCellCreaterTableViewItemTypeCell]) {
+#ifdef RELEASE
+#else
+        NSAssert([cellClass isKindOfClass:object_getClass([UITableViewCell class])], @"cell不是继承UITableViewCell的类");
+#endif
+
         [self registerClass:cellClass forCellReuseIdentifier:NSStringFromClass(cellClass)];
     }
     if ([cellType isEqualToString:AutoCellCreaterTableViewItemTypeFooter]) {
+#ifdef RELEASE
+#else
+        NSAssert([cellClass isKindOfClass:object_getClass([UITableViewHeaderFooterView class])], @"footer不是继承UITableViewHeaderFooterView的类");
+#endif
+
         [self registerClass:cellClass forHeaderFooterViewReuseIdentifier:NSStringFromClass(cellClass)];
     }
     if ([cellType isEqualToString:AutoCellCreaterTableViewItemTypeHeader]) {
+#ifdef RELEASE
+#else
+        NSAssert([cellClass isKindOfClass:object_getClass([UITableViewHeaderFooterView class])], @"header不是继承UITableViewHeaderFooterView的类");
+#endif
+
         [self registerClass:cellClass forHeaderFooterViewReuseIdentifier:NSStringFromClass(cellClass)];
     }
     
@@ -270,7 +400,11 @@ static NSString *const AutoCellCreaterTableViewItemTypeFooter = @"AutoCellCreate
 }
 
 -(void)addCellWithClass:(Class)cellClass bindModel:(id)bindModel indexPath:(NSIndexPath*)indexPath customSetCellBlock:(acct_customSetCell)customSetCellBlock{
-    
+#ifdef RELEASE
+#else
+    NSAssert([cellClass isKindOfClass:object_getClass([UITableViewCell class])], @"cell不是继承UITableViewCell的类");
+#endif
+
     NSMutableArray *tmpCellArr=self.createrDic[AutoCellCreaterTableViewItemTypeCell];
     
     NSMutableDictionary *tmpCreaterDic=[[NSMutableDictionary alloc] init];

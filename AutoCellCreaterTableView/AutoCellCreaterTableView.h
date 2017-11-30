@@ -9,6 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "AutoCellCreaterTableViewProtocol.h"
 
+@interface UITableViewHeaderFooterView (AutoCellCreaterTableView)
+
+@property(nonatomic,strong)id acct_bindModel;
+@property(nonatomic,strong)NSIndexPath *acct_indexPath;
+
+-(CGFloat)acct_getCellHeight;
+
+@end
+
 @interface UITableViewCell (AutoCellCreaterTableView)
 
 @property(nonatomic,strong)id acct_bindModel;
@@ -33,6 +42,11 @@ typedef BOOL  (^acct_createFilter)(UITableView *tableView,NSIndexPath *indexPath
  设置cell自定义扩展处理
  */
 typedef void  (^acct_customSetCell)(UITableView *tableView,UIView *tableViewCell,NSIndexPath *indexPath);
+
+/**
+ 获取cell绑定Model 非持有型block
+ */
+typedef id  (^acct_getCellBindModel)(UIView *tableViewCell,NSIndexPath *indexPath);
 
 #pragma mark - 常用回调Block封装 需要其他回调直接继承扩展即可
 typedef void  (^acct_tableViewDidSelectRowAtIndexPath)(UITableView *tableView,NSIndexPath *indexPath);
@@ -111,5 +125,11 @@ typedef void  (^acct_scrollViewDidScroll)(UIScrollView *scrollView);
 -(void)addHeaderWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock customSetCellBlock:(acct_customSetCell)customSetCellBlock heightForRowAtIndexPathBlock:(acct_heightForRowAtIndexPath)heightForRowAtIndexPathBlock;
 -(void)addFooterWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock customSetCellBlock:(acct_customSetCell)customSetCellBlock heightForRowAtIndexPathBlock:(acct_heightForRowAtIndexPath)heightForRowAtIndexPathBlock;
 
+
+//根据AutoCellCreaterTableViewOrderProtocol自动实现高度及数据绑定创建cell，自动完成customSetCellBlock和heightForRowAtIndexPathBlock
+-(void)addCellWithClass:(Class)cellClass getCellBindModelBlock:(acct_getCellBindModel)getCellBindModelBlock;
+-(void)addCellWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock getCellBindModelBlock:(acct_getCellBindModel)getCellBindModelBlock;
+-(void)addHeaderWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock getCellBindModelBlock:(acct_getCellBindModel)getCellBindModelBlock;
+-(void)addFooterWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock getCellBindModelBlock:(acct_getCellBindModel)getCellBindModelBlock;
 
 @end
