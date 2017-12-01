@@ -46,7 +46,17 @@ typedef void  (^acct_customSetCell)(UITableView *tableView,UIView *tableViewCell
 /**
  获取cell绑定Model 非持有型block
  */
-typedef id  (^acct_getCellBindModel)(UIView *tableViewCell,NSIndexPath *indexPath);
+typedef id  (^acct_getCellBindModel)(UITableView *tableView,NSIndexPath *indexPath);
+
+/**
+ 完成cell绑定Model 非持有型block
+
+ @param tableView tableView
+ @param cellOrHeaderFooter 可能为nil也可能是UITableViewHeaderFooterView或UITableView对象，方便完成绑定后其他相关逻辑
+ @param indexPath indexPath
+ @return bindModel
+ */
+typedef id  (^acct_cellToBindModel)(UITableView *tableView,id cellOrHeaderFooter,NSIndexPath *indexPath);
 
 #pragma mark - 常用回调Block封装 需要其他回调直接继承扩展即可
 typedef void  (^acct_tableViewDidSelectRowAtIndexPath)(UITableView *tableView,NSIndexPath *indexPath);
@@ -131,5 +141,10 @@ typedef void  (^acct_scrollViewDidScroll)(UIScrollView *scrollView);
 -(void)addCellWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock getCellBindModelBlock:(acct_getCellBindModel)getCellBindModelBlock;
 -(void)addHeaderWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock getCellBindModelBlock:(acct_getCellBindModel)getCellBindModelBlock;
 -(void)addFooterWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock getCellBindModelBlock:(acct_getCellBindModel)getCellBindModelBlock;
+
+-(void)addCellWithClass:(Class)cellClass cellToBindModelBlock:(acct_cellToBindModel)cellToBindModelBlock;
+-(void)addCellWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock cellToBindModelBlock:(acct_cellToBindModel)cellToBindModelBlock;
+-(void)addHeaderWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock cellToBindModelBlock:(acct_cellToBindModel)cellToBindModelBlock;
+-(void)addFooterWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock cellToBindModelBlock:(acct_cellToBindModel)cellToBindModelBlock;
 
 @end

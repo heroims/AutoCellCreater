@@ -188,19 +188,52 @@ static NSString *const AutoCellCreaterTableViewItemTypeFooter = @"AutoCellCreate
 #endif
 
     [self addCellWithClass:cellClass createFilterBlock:filterBlock customSetCellBlock:^(UITableView *tableView, UIView *tableViewCell, NSIndexPath *indexPath) {
-        UITableViewHeaderFooterView<AutoCellCreaterTableViewOrderProtocol> *cell=(UITableViewHeaderFooterView<AutoCellCreaterTableViewOrderProtocol>*)tableViewCell;
-        
-        id bindModel=getCellBindModelBlock(tableView,indexPath);
-        
-        cell.acct_bindModel=bindModel;
-        cell.acct_indexPath=indexPath;
-        
-        [cell acct_setBindModel:bindModel indexPath:indexPath];
+        if (getCellBindModelBlock) {
+            UITableViewHeaderFooterView<AutoCellCreaterTableViewOrderProtocol> *cell=(UITableViewHeaderFooterView<AutoCellCreaterTableViewOrderProtocol>*)tableViewCell;
+            
+            id bindModel=getCellBindModelBlock(tableView,indexPath);
+            
+            cell.acct_bindModel=bindModel;
+            cell.acct_indexPath=indexPath;
+            
+            [cell acct_setBindModel:bindModel indexPath:indexPath];
+        }
         
     } heightForRowAtIndexPathBlock:^CGFloat(UITableView *tableView, NSIndexPath *indexPath) {
-        id bindModel=getCellBindModelBlock(tableView,indexPath);
+        if (getCellBindModelBlock) {
+            id bindModel=getCellBindModelBlock(tableView,indexPath);
+            
+            return [cellClass acct_getCellHeightWithModel:bindModel indexPath:indexPath];
+        }
+        return 0.1;
+    } cellType:AutoCellCreaterTableViewItemTypeHeader];
+}
+
+-(void)addHeaderWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock cellToBindModelBlock:(acct_cellToBindModel)cellToBindModelBlock{
+#ifdef RELEASE
+#else
+    NSAssert([cellClass conformsToProtocol:objc_getProtocol("AutoCellCreaterTableViewOrderProtocol")], @"未实现AutoCellCreaterTableViewOrderProtocol禁止使用");
+#endif
+    
+    [self addCellWithClass:cellClass createFilterBlock:filterBlock customSetCellBlock:^(UITableView *tableView, UIView *tableViewCell, NSIndexPath *indexPath) {
+        if (cellToBindModelBlock) {
+            UITableViewHeaderFooterView<AutoCellCreaterTableViewOrderProtocol> *cell=(UITableViewHeaderFooterView<AutoCellCreaterTableViewOrderProtocol>*)tableViewCell;
+            
+            id bindModel=cellToBindModelBlock(tableView,cell,indexPath);
+            
+            cell.acct_bindModel=bindModel;
+            cell.acct_indexPath=indexPath;
+            
+            [cell acct_setBindModel:bindModel indexPath:indexPath];
+        }
         
-        return [cellClass acct_getCellHeightWithModel:bindModel indexPath:indexPath];
+    } heightForRowAtIndexPathBlock:^CGFloat(UITableView *tableView, NSIndexPath *indexPath) {
+        if (cellToBindModelBlock) {
+            id bindModel=cellToBindModelBlock(tableView,nil,indexPath);
+            
+            return [cellClass acct_getCellHeightWithModel:bindModel indexPath:indexPath];
+        }
+        return 0.1;
     } cellType:AutoCellCreaterTableViewItemTypeHeader];
 }
 
@@ -215,19 +248,52 @@ static NSString *const AutoCellCreaterTableViewItemTypeFooter = @"AutoCellCreate
 #endif
 
     [self addCellWithClass:cellClass createFilterBlock:filterBlock customSetCellBlock:^(UITableView *tableView, UIView *tableViewCell, NSIndexPath *indexPath) {
-        UITableViewHeaderFooterView<AutoCellCreaterTableViewOrderProtocol> *cell=(UITableViewHeaderFooterView<AutoCellCreaterTableViewOrderProtocol>*)tableViewCell;
-        
-        id bindModel=getCellBindModelBlock(tableView,indexPath);
-        
-        cell.acct_bindModel=bindModel;
-        cell.acct_indexPath=indexPath;
-        
-        [cell acct_setBindModel:bindModel indexPath:indexPath];
+        if (getCellBindModelBlock) {
+            UITableViewHeaderFooterView<AutoCellCreaterTableViewOrderProtocol> *cell=(UITableViewHeaderFooterView<AutoCellCreaterTableViewOrderProtocol>*)tableViewCell;
+            
+            id bindModel=getCellBindModelBlock(tableView,indexPath);
+            
+            cell.acct_bindModel=bindModel;
+            cell.acct_indexPath=indexPath;
+            
+            [cell acct_setBindModel:bindModel indexPath:indexPath];
+        }
         
     } heightForRowAtIndexPathBlock:^CGFloat(UITableView *tableView, NSIndexPath *indexPath) {
-        id bindModel=getCellBindModelBlock(tableView,indexPath);
+        if (getCellBindModelBlock) {
+            id bindModel=getCellBindModelBlock(tableView,indexPath);
+            
+            return [cellClass acct_getCellHeightWithModel:bindModel indexPath:indexPath];
+        }
+        return 0.1;
+    } cellType:AutoCellCreaterTableViewItemTypeFooter];
+}
+
+-(void)addFooterWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock cellToBindModelBlock:(acct_cellToBindModel)cellToBindModelBlock{
+#ifdef RELEASE
+#else
+    NSAssert([cellClass conformsToProtocol:objc_getProtocol("AutoCellCreaterTableViewOrderProtocol")], @"未实现AutoCellCreaterTableViewOrderProtocol禁止使用");
+#endif
+    
+    [self addCellWithClass:cellClass createFilterBlock:filterBlock customSetCellBlock:^(UITableView *tableView, UIView *tableViewCell, NSIndexPath *indexPath) {
+        if (cellToBindModelBlock) {
+            UITableViewHeaderFooterView<AutoCellCreaterTableViewOrderProtocol> *cell=(UITableViewHeaderFooterView<AutoCellCreaterTableViewOrderProtocol>*)tableViewCell;
+            
+            id bindModel=cellToBindModelBlock(tableView,cell,indexPath);
+            
+            cell.acct_bindModel=bindModel;
+            cell.acct_indexPath=indexPath;
+            
+            [cell acct_setBindModel:bindModel indexPath:indexPath];
+        }
         
-        return [cellClass acct_getCellHeightWithModel:bindModel indexPath:indexPath];
+    } heightForRowAtIndexPathBlock:^CGFloat(UITableView *tableView, NSIndexPath *indexPath) {
+        if (cellToBindModelBlock) {
+            id bindModel=cellToBindModelBlock(tableView,nil,indexPath);
+            
+            return [cellClass acct_getCellHeightWithModel:bindModel indexPath:indexPath];
+        }
+        return 0.1;
     } cellType:AutoCellCreaterTableViewItemTypeFooter];
 }
 
@@ -259,19 +325,55 @@ static NSString *const AutoCellCreaterTableViewItemTypeFooter = @"AutoCellCreate
 #endif
 
     [self addCellWithClass:cellClass createFilterBlock:filterBlock customSetCellBlock:^(UITableView *tableView, UIView *tableViewCell, NSIndexPath *indexPath) {
-        UITableViewCell<AutoCellCreaterTableViewOrderProtocol> *cell=(UITableViewCell<AutoCellCreaterTableViewOrderProtocol>*)tableViewCell;
-        
-        id bindModel=getCellBindModelBlock(tableView,indexPath);
-        
-        cell.acct_bindModel=bindModel;
-        cell.acct_indexPath=indexPath;
-        
-        [cell acct_setBindModel:bindModel indexPath:indexPath];
-        
+        if (getCellBindModelBlock) {
+            UITableViewCell<AutoCellCreaterTableViewOrderProtocol> *cell=(UITableViewCell<AutoCellCreaterTableViewOrderProtocol>*)tableViewCell;
+            
+            id bindModel=getCellBindModelBlock(tableView,indexPath);
+            
+            cell.acct_bindModel=bindModel;
+            cell.acct_indexPath=indexPath;
+            
+            [cell acct_setBindModel:bindModel indexPath:indexPath];
+        }
     } heightForRowAtIndexPathBlock:^CGFloat(UITableView *tableView, NSIndexPath *indexPath) {
-        id bindModel=getCellBindModelBlock(tableView,indexPath);
+        if (getCellBindModelBlock) {
+            id bindModel=getCellBindModelBlock(tableView,indexPath);
+            
+            return [cellClass acct_getCellHeightWithModel:bindModel indexPath:indexPath];
+        }
+        return 0;
+    } cellType:AutoCellCreaterTableViewItemTypeCell];
 
-        return [cellClass acct_getCellHeightWithModel:bindModel indexPath:indexPath];
+}
+
+-(void)addCellWithClass:(Class)cellClass cellToBindModelBlock:(acct_cellToBindModel)cellToBindModelBlock{
+    [self addCellWithClass:cellClass createFilterBlock:nil cellToBindModelBlock:cellToBindModelBlock];
+}
+
+-(void)addCellWithClass:(Class)cellClass createFilterBlock:(acct_createFilter)filterBlock cellToBindModelBlock:(acct_cellToBindModel)cellToBindModelBlock{
+#ifdef RELEASE
+#else
+    NSAssert([cellClass conformsToProtocol:objc_getProtocol("AutoCellCreaterTableViewOrderProtocol")], @"未实现AutoCellCreaterTableViewOrderProtocol禁止使用");
+#endif
+    
+    [self addCellWithClass:cellClass createFilterBlock:filterBlock customSetCellBlock:^(UITableView *tableView, UIView *tableViewCell, NSIndexPath *indexPath) {
+        if (cellToBindModelBlock) {
+            UITableViewCell<AutoCellCreaterTableViewOrderProtocol> *cell=(UITableViewCell<AutoCellCreaterTableViewOrderProtocol>*)tableViewCell;
+            
+            id bindModel=cellToBindModelBlock(tableView,cell,indexPath);
+            
+            cell.acct_bindModel=bindModel;
+            cell.acct_indexPath=indexPath;
+            
+            [cell acct_setBindModel:bindModel indexPath:indexPath];
+        }
+    } heightForRowAtIndexPathBlock:^CGFloat(UITableView *tableView, NSIndexPath *indexPath) {
+        if (cellToBindModelBlock) {
+            id bindModel=cellToBindModelBlock(tableView,nil,indexPath);
+            
+            return [cellClass acct_getCellHeightWithModel:bindModel indexPath:indexPath];
+        }
+        return 0;
     } cellType:AutoCellCreaterTableViewItemTypeCell];
 
 }

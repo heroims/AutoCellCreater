@@ -119,17 +119,46 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
 #endif
 
     [self addHeaderWithClass:cellClass createFilterBlock:filterBlock customSetCellBlock:^(UICollectionView *collectionView, UICollectionReusableView *collectionViewCell, NSIndexPath *indexPath) {
-        id bindModel=getCellModelBlock(collectionView,indexPath);
-        
-        collectionViewCell.accc_bindModel=bindModel;
-        collectionViewCell.accc_indexPath=indexPath;
-        
-        [(UICollectionReusableView<AutoCellCreaterCollectionViewOrderProtocol>*)collectionViewCell accc_setBindModel:bindModel indexPath:indexPath];
-
+        if (getCellModelBlock) {
+            id bindModel=getCellModelBlock(collectionView,indexPath);
+            
+            collectionViewCell.accc_bindModel=bindModel;
+            collectionViewCell.accc_indexPath=indexPath;
+            
+            [(UICollectionReusableView<AutoCellCreaterCollectionViewOrderProtocol>*)collectionViewCell accc_setBindModel:bindModel indexPath:indexPath];
+        }
     } sizeForItemAtIndexPathBlock:^CGSize(UICollectionView *collectionView, UICollectionViewLayout *collectionViewLayout, NSIndexPath *indexPath) {
-        id bindModel=getCellModelBlock(collectionView,indexPath);
-        
-        return [cellClass accc_getCellSizeWithModel:bindModel indexPath:indexPath];
+        if (getCellModelBlock) {
+            id bindModel=getCellModelBlock(collectionView,indexPath);
+            
+            return [cellClass accc_getCellSizeWithModel:bindModel indexPath:indexPath];
+        }
+        return CGSizeZero;
+    }];
+}
+
+-(void)addHeaderWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock cellToBindModelBlock:(accc_cellToBindModel)cellToBindModelBlock{
+#ifdef RELEASE
+#else
+    NSAssert([cellClass conformsToProtocol:objc_getProtocol("AutoCellCreaterCollectionViewOrderProtocol")], @"未实现AutoCellCreaterCollectionViewOrderProtocol禁止使用");
+#endif
+    
+    [self addHeaderWithClass:cellClass createFilterBlock:filterBlock customSetCellBlock:^(UICollectionView *collectionView, UICollectionReusableView *collectionViewCell, NSIndexPath *indexPath) {
+        if (cellToBindModelBlock) {
+            id bindModel=cellToBindModelBlock(collectionView,collectionViewCell,indexPath);
+            
+            collectionViewCell.accc_bindModel=bindModel;
+            collectionViewCell.accc_indexPath=indexPath;
+            
+            [(UICollectionReusableView<AutoCellCreaterCollectionViewOrderProtocol>*)collectionViewCell accc_setBindModel:bindModel indexPath:indexPath];
+        }
+    } sizeForItemAtIndexPathBlock:^CGSize(UICollectionView *collectionView, UICollectionViewLayout *collectionViewLayout, NSIndexPath *indexPath) {
+        if (cellToBindModelBlock) {
+            id bindModel=cellToBindModelBlock(collectionView,collectionViewLayout,indexPath);
+            
+            return [cellClass accc_getCellSizeWithModel:bindModel indexPath:indexPath];
+        }
+        return CGSizeZero;
     }];
 }
 
@@ -170,17 +199,47 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
 #endif
 
     [self addFooterWithClass:cellClass createFilterBlock:filterBlock customSetCellBlock:^(UICollectionView *collectionView, UICollectionReusableView *collectionViewCell, NSIndexPath *indexPath) {
-        id bindModel=getCellModelBlock(collectionView,indexPath);
-        
-        collectionViewCell.accc_bindModel=bindModel;
-        collectionViewCell.accc_indexPath=indexPath;
-        
-        [(UICollectionReusableView<AutoCellCreaterCollectionViewOrderProtocol>*)collectionViewCell accc_setBindModel:bindModel indexPath:indexPath];
+        if (getCellModelBlock) {
+            id bindModel=getCellModelBlock(collectionView,indexPath);
+            
+            collectionViewCell.accc_bindModel=bindModel;
+            collectionViewCell.accc_indexPath=indexPath;
+            
+            [(UICollectionReusableView<AutoCellCreaterCollectionViewOrderProtocol>*)collectionViewCell accc_setBindModel:bindModel indexPath:indexPath];
+        }
 
     } sizeForItemAtIndexPathBlock:^CGSize(UICollectionView *collectionView, UICollectionViewLayout *collectionViewLayout, NSIndexPath *indexPath) {
-        id bindModel=getCellModelBlock(collectionView,indexPath);
-        
-        return [cellClass accc_getCellSizeWithModel:bindModel indexPath:indexPath];
+        if (getCellModelBlock) {
+            id bindModel=getCellModelBlock(collectionView,indexPath);
+            
+            return [cellClass accc_getCellSizeWithModel:bindModel indexPath:indexPath];
+        }
+        return CGSizeZero;
+    }];
+}
+
+-(void)addFooterWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock cellToBindModelBlock:(accc_cellToBindModel)cellToBindModelBlock{
+#ifdef RELEASE
+#else
+    NSAssert([cellClass conformsToProtocol:objc_getProtocol("AutoCellCreaterCollectionViewOrderProtocol")], @"未实现AutoCellCreaterCollectionViewOrderProtocol禁止使用");
+#endif
+    
+    [self addFooterWithClass:cellClass createFilterBlock:filterBlock customSetCellBlock:^(UICollectionView *collectionView, UICollectionReusableView *collectionViewCell, NSIndexPath *indexPath) {
+        if (cellToBindModelBlock) {
+            id bindModel=cellToBindModelBlock(collectionView,collectionViewCell,indexPath);
+            
+            collectionViewCell.accc_bindModel=bindModel;
+            collectionViewCell.accc_indexPath=indexPath;
+            
+            [(UICollectionReusableView<AutoCellCreaterCollectionViewOrderProtocol>*)collectionViewCell accc_setBindModel:bindModel indexPath:indexPath];
+        }
+    } sizeForItemAtIndexPathBlock:^CGSize(UICollectionView *collectionView, UICollectionViewLayout *collectionViewLayout, NSIndexPath *indexPath) {
+        if (cellToBindModelBlock) {
+            id bindModel=cellToBindModelBlock(collectionView,collectionViewLayout,indexPath);
+            
+            return [cellClass accc_getCellSizeWithModel:bindModel indexPath:indexPath];
+        }
+        return CGSizeZero;
     }];
 }
 
@@ -236,19 +295,53 @@ typedef enum LastAddACCCollectionViewSectionType:NSInteger{
 #endif
 
     [self addCellWithClass:cellClass createFilterBlock:filterBlock customSetCellBlock:^(UICollectionView *collectionView, UICollectionReusableView *collectionViewCell, NSIndexPath *indexPath) {
-        id bindModel=getCellModelBlock(collectionView,indexPath);
-        
-        collectionViewCell.accc_bindModel=bindModel;
-        collectionViewCell.accc_indexPath=indexPath;
-        
-        [(UICollectionReusableView<AutoCellCreaterCollectionViewOrderProtocol>*)collectionViewCell accc_setBindModel:bindModel indexPath:indexPath];
+        if (getCellModelBlock) {
+            id bindModel=getCellModelBlock(collectionView,indexPath);
+            
+            collectionViewCell.accc_bindModel=bindModel;
+            collectionViewCell.accc_indexPath=indexPath;
+            
+            [(UICollectionReusableView<AutoCellCreaterCollectionViewOrderProtocol>*)collectionViewCell accc_setBindModel:bindModel indexPath:indexPath];
+        }
     } sizeForItemAtIndexPathBlock:^CGSize(UICollectionView *collectionView, UICollectionViewLayout *collectionViewLayout, NSIndexPath *indexPath) {
-        id bindModel=getCellModelBlock(collectionView,indexPath);
-        
-        return [cellClass accc_getCellSizeWithModel:bindModel indexPath:indexPath];
+        if (getCellModelBlock) {
+            id bindModel=getCellModelBlock(collectionView,indexPath);
+            
+            return [cellClass accc_getCellSizeWithModel:bindModel indexPath:indexPath];
+        }
+        return CGSizeZero;
     }];
 }
 
+
+-(void)addCellWithClass:(Class)cellClass cellToBindModelBlock:(accc_cellToBindModel)cellToBindModelBlock{
+    [self addCellWithClass:cellClass createFilterBlock:nil cellToBindModelBlock:cellToBindModelBlock];
+}
+
+-(void)addCellWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock cellToBindModelBlock:(accc_cellToBindModel)cellToBindModelBlock{
+#ifdef RELEASE
+#else
+    NSAssert([cellClass conformsToProtocol:objc_getProtocol("AutoCellCreaterCollectionViewOrderProtocol")], @"未实现AutoCellCreaterCollectionViewOrderProtocol禁止使用");
+#endif
+    
+    [self addCellWithClass:cellClass createFilterBlock:filterBlock customSetCellBlock:^(UICollectionView *collectionView, UICollectionReusableView *collectionViewCell, NSIndexPath *indexPath) {
+        if (cellToBindModelBlock) {
+            id bindModel=cellToBindModelBlock(collectionView,collectionViewCell,indexPath);
+            
+            collectionViewCell.accc_bindModel=bindModel;
+            collectionViewCell.accc_indexPath=indexPath;
+            
+            [(UICollectionReusableView<AutoCellCreaterCollectionViewOrderProtocol>*)collectionViewCell accc_setBindModel:bindModel indexPath:indexPath];
+        }
+    } sizeForItemAtIndexPathBlock:^CGSize(UICollectionView *collectionView, UICollectionViewLayout *collectionViewLayout, NSIndexPath *indexPath) {
+        if (cellToBindModelBlock) {
+            id bindModel=cellToBindModelBlock(collectionView,collectionViewLayout,indexPath);
+            
+            return [cellClass accc_getCellSizeWithModel:bindModel indexPath:indexPath];
+        }
+        return CGSizeZero;
+    }];
+}
 
 -(void)addCellWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock customSetCellBlock:(accc_customSetCell)customSetCellBlock sizeForItemAtIndexPathBlock:(accc_sizeForItemAtIndexPath)sizeForItemAtIndexPathBlock{
 #ifdef RELEASE

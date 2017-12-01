@@ -39,6 +39,17 @@ typedef void  (^accc_customSetCell)(UICollectionView *collectionView,UICollectio
  */
 typedef id  (^accc_getCellBindModel)(UICollectionView *collectionView,NSIndexPath *indexPath);
 
+
+/**
+ 完成cell绑定Model 非持有型block
+ 
+ @param collectionView collectionView
+ @param cellOrLayout 可能是UICollectionReusableView或UICollectionViewLayout，方便完成绑定后其他相关逻辑
+ @param indexPath indexPath
+ @return bindModel
+ */
+typedef id  (^accc_cellToBindModel)(UICollectionView *collectionView,id cellOrLayout,NSIndexPath *indexPath);
+
 #pragma mark - 常用回调Block封装 需要其他回调直接继承扩展即可
 typedef void  (^accc_collectionViewDidSelectRowAtIndexPath)(UICollectionView *collectionView,NSIndexPath *indexPath);
 
@@ -109,5 +120,10 @@ typedef void  (^accc_scrollViewDidScroll)(UIScrollView *scrollView);
 -(void)addCellWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock getCellBindModelBlock:(accc_getCellBindModel)getCellModelBlock;
 -(void)addHeaderWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock getCellBindModelBlock:(accc_getCellBindModel)getCellModelBlock;
 -(void)addFooterWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock getCellBindModelBlock:(accc_getCellBindModel)getCellModelBlock;
+
+-(void)addCellWithClass:(Class)cellClass cellToBindModelBlock:(accc_cellToBindModel)cellToBindModelBlock;
+-(void)addCellWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock cellToBindModelBlock:(accc_cellToBindModel)cellToBindModelBlock;
+-(void)addHeaderWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock cellToBindModelBlock:(accc_cellToBindModel)cellToBindModelBlock;
+-(void)addFooterWithClass:(Class)cellClass createFilterBlock:(accc_createFilter)filterBlock cellToBindModelBlock:(accc_cellToBindModel)cellToBindModelBlock;
 
 @end
